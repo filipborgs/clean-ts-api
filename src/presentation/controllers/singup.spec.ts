@@ -1,0 +1,18 @@
+import { SingUpController } from './singup'
+
+describe('SingUp Controller', () => {
+  test('should return if no name is provided', () => {
+    const sut = new SingUpController()
+    const httpRequest = {
+      body: {
+        name: '',
+        email: '',
+        password: '',
+        passwordConfirmation: ''
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+  })
+})
