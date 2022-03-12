@@ -1,10 +1,8 @@
 import { SingUpController } from './singup'
 import faker from '@faker-js/faker'
 import { HttpRequest, HttpResponse } from '../protocols/http'
-import { MissingParamError } from '../erros/missing-param-error'
-import { InvalidParamError } from '../erros/invalid-param-error'
 import { EmailValidator } from '../protocols/email-validator'
-import { ServerError } from '../erros/server-error'
+import { ServerError, InvalidParamError, MissingParamError } from '../erros'
 
 describe('SingUp Controller', () => {
   let httpRequest: HttpRequest
