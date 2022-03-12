@@ -86,6 +86,16 @@ describe('SingUp Controller', () => {
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
+  test('should return 400 if password and passwordConfirmation is different', () => {
+    httpRequest.body.password = 'anyPassword'
+    httpRequest.body.passwordConfirmation = 'diferentPassword'
+
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+  })
+
   test('should return 202 if request has no error', () => {
     const httpResponse: HttpResponse = sut.handle(httpRequest)
 
