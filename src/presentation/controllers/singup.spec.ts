@@ -1,6 +1,7 @@
 import { SingUpController } from './singup'
 import faker from '@faker-js/faker'
 import { HttpRequest, HttpResponse } from '../protocols/http'
+import { MissingParamError } from '../erros/missing-param-error'
 
 describe('SingUp Controller', () => {
   let httpRequest: HttpRequest
@@ -24,7 +25,7 @@ describe('SingUp Controller', () => {
     const httpResponse: HttpResponse = sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new Error('Missing required param: name'))
+    expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
 
   test('should return 400 if no email is provided', () => {
@@ -32,7 +33,7 @@ describe('SingUp Controller', () => {
     const httpResponse: HttpResponse = sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new Error('Missing required param: email'))
+    expect(httpResponse.body).toEqual(new MissingParamError('email'))
   })
 
   test('should return 202 if request has no error', () => {
