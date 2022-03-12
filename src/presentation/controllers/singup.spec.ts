@@ -4,6 +4,7 @@ import { HttpRequest, HttpResponse } from '../protocols/http'
 import { MissingParamError } from '../erros/missing-param-error'
 import { InvalidParamError } from '../erros/invalid-param-error'
 import { EmailValidator } from '../protocols/email-validator'
+import { ServerError } from '../erros/server-error'
 
 describe('SingUp Controller', () => {
   let httpRequest: HttpRequest
@@ -78,6 +79,14 @@ describe('SingUp Controller', () => {
     const emailValidatorSpy = jest.spyOn(emailValidatorStub, 'isValid')
     sut.handle(httpRequest)
     expect(emailValidatorSpy).toBeCalledWith(httpRequest.body.email)
+  })
+
+  test('should return 500 if EmailValidator throws', () => {
+    const throwFunction = (email: string): boolean => { throw new Error() }
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementation(throwFunction)
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('should return 202 if request has no error', () => {
