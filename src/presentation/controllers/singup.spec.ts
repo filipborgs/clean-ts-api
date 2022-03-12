@@ -5,7 +5,6 @@ describe('SingUp Controller', () => {
     const sut = new SingUpController()
     const httpRequest = {
       body: {
-        name: '',
         email: '',
         password: '',
         passwordConfirmation: ''
