@@ -6,5 +6,11 @@ export class SingUpController {
         body: new Error('Missing required param: name')
       }
     }
+    if (!httpRequest.body.email) {
+      return {
+        statusCode: 400,
+        body: new Error('Missing required param: email')
+      }
+    }
   }
 }
