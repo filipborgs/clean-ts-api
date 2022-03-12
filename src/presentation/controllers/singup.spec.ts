@@ -25,4 +25,12 @@ describe('SingUp Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new Error('Missing required param: name'))
   })
+
+  test('should return if no email is provided', () => {
+    delete httpRequest.body.email
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new Error('Missing required param: email'))
+  })
 })
