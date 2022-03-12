@@ -1,8 +1,10 @@
 export class SingUpController {
-  handle (httpRequest: any): any {
-    return {
-      statusCode: 400,
-      body: new Error('')
+  handle(httpRequest: any): any {
+    if (!httpRequest.body.name) {
+      return {
+        statusCode: 400,
+        body: new Error('Missing required param: name')
+      }
     }
   }
 }
