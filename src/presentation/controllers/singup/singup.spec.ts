@@ -130,9 +130,15 @@ describe('SingUp Controller', () => {
     expect(addAccountSpy).toBeCalledWith(payload)
   })
 
-  test('should return 204 if request has no error', () => {
+  test('should return 201 if request has sucess', () => {
     const httpResponse: HttpResponse = sut.handle(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(204)
+    const account = {
+      id: 'valid_id',
+      name: httpRequest.body.name,
+      email: httpRequest.body.email,
+      password: httpRequest.body.password
+    }
+    expect(httpResponse.statusCode).toBe(201)
+    expect(httpResponse.body).toEqual(account)
   })
 })
