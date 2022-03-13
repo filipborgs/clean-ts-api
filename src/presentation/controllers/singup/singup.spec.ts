@@ -1,9 +1,7 @@
 import { SingUpController } from './singup'
 import faker from '@faker-js/faker'
-import { HttpRequest, HttpResponse, EmailValidator } from '../protocols'
-import { ServerError, InvalidParamError, MissingParamError } from '../erros'
-import { AddAccount, AddAccountModel } from '../../domain/use-cases'
-import { AccountModel } from '../../domain/models'
+import { ServerError, InvalidParamError, MissingParamError } from '../../erros'
+import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, EmailValidator } from './singup-protocols'
 
 describe('SingUp Controller', () => {
   let httpRequest: HttpRequest
