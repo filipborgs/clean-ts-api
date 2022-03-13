@@ -99,6 +99,14 @@ describe('SingUp Controller', () => {
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
+  test('should return 500 if AddAccount throws', () => {
+    const throwsFunction = (account: AddAccountModel): AccountModel => { throw new Error() }
+    jest.spyOn(addAccountStub, 'add').mockImplementation(throwsFunction)
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
+
   test('should return 400 if password and passwordConfirmation is different', () => {
     httpRequest.body.password = 'anyPassword'
     httpRequest.body.passwordConfirmation = 'diferentPassword'
