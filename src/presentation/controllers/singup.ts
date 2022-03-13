@@ -1,6 +1,6 @@
 import { AddAccount } from '../../domain/use-cases'
 import { InvalidParamError, MissingParamError } from '../erros'
-import { badRequest, serverError } from '../helpers/http-helper'
+import { badRequest, noContent, serverError } from '../helpers/http-helper'
 import { HttpRequest, HttpResponse, Controller, EmailValidator } from '../protocols'
 
 export class SingUpController implements Controller {
@@ -26,9 +26,7 @@ export class SingUpController implements Controller {
       }
       this.addAccount.add({ name, email, password })
 
-      return {
-        statusCode: 202
-      }
+      return noContent()
     } catch (error) {
       return serverError()
     }

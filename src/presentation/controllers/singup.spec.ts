@@ -124,9 +124,9 @@ describe('SingUp Controller', () => {
     expect(addAccountSpy).toBeCalledWith(payload)
   })
 
-  test('should return 202 if request has no error', () => {
+  test('should return 204 if request has no error', () => {
     const httpResponse: HttpResponse = sut.handle(httpRequest)
 
-    expect(httpResponse.statusCode).toBe(202)
+    expect(httpResponse.statusCode).toBe(204)
   })
 })
