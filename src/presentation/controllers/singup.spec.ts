@@ -2,13 +2,14 @@ import { SingUpController } from './singup'
 import faker from '@faker-js/faker'
 import { HttpRequest, HttpResponse, EmailValidator } from '../protocols'
 import { ServerError, InvalidParamError, MissingParamError } from '../erros'
-import { IAddAccountUseCase } from '../../use-cases/protocols/add-account'
+import { AddAccount, AddAccountModel } from '../../domain/use-cases'
+import { AccountModel } from '../../domain/models'
 
 describe('SingUp Controller', () => {
   let httpRequest: HttpRequest
   let sut: SingUpController
   let emailValidatorStub: EmailValidator
-  let addAccountUseCaseStub: IAddAccountUseCase
+  let addAccountStub: AddAccount
 
   beforeEach(() => {
     class EmailValidatorStub implements EmailValidator {
@@ -16,15 +17,20 @@ describe('SingUp Controller', () => {
         return true
       }
     }
-    class AddAccountUseCase implements IAddAccountUseCase {
-      addAccount (data: any): boolean {
-        return true
+    class AddAccount implements AddAccount {
+      add (account: AddAccountModel): AccountModel {
+        return {
+          id: 'valid_id',
+          name: account.name,
+          email: account.email,
+          password: account.password
+        }
       }
     }
 
     emailValidatorStub = new EmailValidatorStub()
-    addAccountUseCaseStub = new AddAccountUseCase()
-    sut = new SingUpController(emailValidatorStub, addAccountUseCaseStub)
+    addAccountStub = new AddAccount()
+    sut = new SingUpController(emailValidatorStub, addAccountStub)
 
     const password = faker.internet.password()
     httpRequest = {
@@ -106,7 +112,7 @@ describe('SingUp Controller', () => {
   })
 
   test('should call AddAccount with correct values', () => {
-    const addAccountSpy = jest.spyOn(addAccountUseCaseStub, 'addAccount')
+    const addAccountSpy = jest.spyOn(addAccountStub, 'add')
     sut.handle(httpRequest)
 
     const payload = {
