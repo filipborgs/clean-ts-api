@@ -1,4 +1,4 @@
-import { IAddAccountUseCase } from '../../use-cases/protocols/add-account'
+import { AddAccount } from '../../domain/use-cases'
 import { InvalidParamError, MissingParamError } from '../erros'
 import { badRequest, serverError } from '../helpers/http-helper'
 import { HttpRequest, HttpResponse, Controller, EmailValidator } from '../protocols'
@@ -6,7 +6,7 @@ import { HttpRequest, HttpResponse, Controller, EmailValidator } from '../protoc
 export class SingUpController implements Controller {
   constructor (
     private readonly emailValidator: EmailValidator,
-    private readonly addAccountUseCase: IAddAccountUseCase) {}
+    private readonly addAccount: AddAccount) {}
 
   handle (httpRequest: HttpRequest): HttpResponse {
     try {
@@ -24,7 +24,7 @@ export class SingUpController implements Controller {
       if (!this.emailValidator.isValid(email)) {
         return badRequest(new InvalidParamError('email'))
       }
-      this.addAccountUseCase.addAccount({ name, email, password })
+      this.addAccount.add({ name, email, password })
 
       return {
         statusCode: 202
