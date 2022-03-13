@@ -1,6 +1,6 @@
 import { InvalidParamError, MissingParamError } from '../../erros'
-import { badRequest, noContent, serverError } from '../../helpers/http-helper'
-import { AddAccount, HttpRequest, HttpResponse, Controller, EmailValidator } from './singup-protocols'
+import { badRequest, created, serverError } from '../../helpers/http-helper'
+import { AddAccount, HttpRequest, HttpResponse, Controller, EmailValidator, AccountModel } from './singup-protocols'
 
 export class SingUpController implements Controller {
   constructor (
@@ -23,9 +23,9 @@ export class SingUpController implements Controller {
       if (!this.emailValidator.isValid(email)) {
         return badRequest(new InvalidParamError('email'))
       }
-      this.addAccount.add({ name, email, password })
+      const account: AccountModel = this.addAccount.add({ name, email, password })
 
-      return noContent()
+      return created(account)
     } catch (error) {
       return serverError()
     }
