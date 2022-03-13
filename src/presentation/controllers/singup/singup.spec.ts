@@ -16,13 +16,14 @@ describe('SingUp Controller', () => {
       }
     }
     class AddAccount implements AddAccount {
-      add (account: AddAccountModel): AccountModel {
-        return {
+      async add (account: AddAccountModel): Promise<AccountModel> {
+        const fakeAccount: AccountModel = {
           id: 'valid_id',
           name: account.name,
           email: account.email,
           password: account.password
         }
+        return await Promise.resolve(fakeAccount)
       }
     }
 
@@ -41,85 +42,85 @@ describe('SingUp Controller', () => {
     }
   })
 
-  test('should return 400 if no name is provided', () => {
+  test('should return 400 if no name is provided', async () => {
     delete httpRequest.body.name
-    const httpResponse: HttpResponse = sut.handle(httpRequest)
+    const httpResponse: HttpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
 
-  test('should return 400 if no email is provided', () => {
+  test('should return 400 if no email is provided', async () => {
     delete httpRequest.body.email
-    const httpResponse: HttpResponse = sut.handle(httpRequest)
+    const httpResponse: HttpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('email'))
   })
 
-  test('should return 400 if no password is provided', () => {
+  test('should return 400 if no password is provided', async () => {
     delete httpRequest.body.password
-    const httpResponse: HttpResponse = sut.handle(httpRequest)
+    const httpResponse: HttpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('password'))
   })
 
-  test('should return 400 if no passwordConfirmation is provided', () => {
+  test('should return 400 if no passwordConfirmation is provided', async () => {
     delete httpRequest.body.passwordConfirmation
-    const httpResponse: HttpResponse = sut.handle(httpRequest)
+    const httpResponse: HttpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
   })
 
-  test('should return 400 if no an email is provided', () => {
+  test('should return 400 if no an email is provided', async () => {
     httpRequest.body.email = 'invalidEmail'
 
     const emailValidatorSpy = jest.spyOn(emailValidatorStub, 'isValid').mockReturnValue(false)
 
-    const httpResponse: HttpResponse = sut.handle(httpRequest)
+    const httpResponse: HttpResponse = await sut.handle(httpRequest)
 
     expect(emailValidatorSpy).toBeCalledWith(httpRequest.body.email)
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
   })
 
-  test('should call emailValidator with correct email', () => {
+  test('should call emailValidator with correct email', async () => {
     const emailValidatorSpy = jest.spyOn(emailValidatorStub, 'isValid')
-    sut.handle(httpRequest)
+    await sut.handle(httpRequest)
     expect(emailValidatorSpy).toBeCalledWith(httpRequest.body.email)
   })
 
-  test('should return 500 if EmailValidator throws', () => {
+  test('should return 500 if EmailValidator throws', async () => {
     const throwFunction = (email: string): boolean => { throw new Error() }
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementation(throwFunction)
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
-  test('should return 500 if AddAccount throws', () => {
-    const throwsFunction = (account: AddAccountModel): AccountModel => { throw new Error() }
+  test('should return 500 if AddAccount throws', async () => {
+    const throwsFunction = async (account: AddAccountModel): Promise<AccountModel> => { throw new Error() }
     jest.spyOn(addAccountStub, 'add').mockImplementation(throwsFunction)
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
   })
 
-  test('should return 400 if password and passwordConfirmation is different', () => {
+  test('should return 400 if password and passwordConfirmation is different', async () => {
     httpRequest.body.password = 'anyPassword'
     httpRequest.body.passwordConfirmation = 'diferentPassword'
 
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
   })
 
-  test('should call AddAccount with correct values', () => {
+  test('should call AddAccount with correct values', async () => {
     const addAccountSpy = jest.spyOn(addAccountStub, 'add')
-    sut.handle(httpRequest)
+    await sut.handle(httpRequest)
 
     const payload = {
       name: httpRequest.body.name,
@@ -130,8 +131,8 @@ describe('SingUp Controller', () => {
     expect(addAccountSpy).toBeCalledWith(payload)
   })
 
-  test('should return 201 if request has sucess', () => {
-    const httpResponse: HttpResponse = sut.handle(httpRequest)
+  test('should return 201 if request has sucess', async () => {
+    const httpResponse: HttpResponse = await sut.handle(httpRequest)
     const account = {
       id: 'valid_id',
       name: httpRequest.body.name,
