@@ -91,4 +91,19 @@ describe('DbAddAccount Usecase', () => {
       password: 'hashed_value'
     })
   })
+
+  it('should return an account on sucess', async () => {
+    const { sut } = makeSut()
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+    const account = await sut.add(accountData)
+    expect(account).toEqual({
+      ...accountData,
+      id: 'valid_id',
+      password: 'hashed_value'
+    })
+  })
 })
