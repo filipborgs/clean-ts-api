@@ -10,5 +10,5 @@ export const makeSignUpController = (): Controller => {
   const singUpController = new SingUpController(
     new EmailValidatorAdapter(),
     new DbAddAccount(new BcryptAdapter(12), new AccountMongoRepository()))
-  return new LogControllerDecorator(singUpController)
+  return new LogControllerDecorator(singUpController, null as any)
 }
