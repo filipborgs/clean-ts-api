@@ -1,6 +1,6 @@
 import { Authentication, EmailValidator, HttpRequest } from './login-protocols'
 import { InvalidParamError, MissingParamError } from '../../erros'
-import { badRequest, serverError, unauthorized } from '../../helpers/http-helper'
+import { badRequest, ok, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'
 
 class EmailValidatorStub implements EmailValidator {
@@ -116,5 +116,12 @@ describe('Login Controller', () => {
     jest.spyOn(authenticationStub, 'login').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 200 if valid credentials are provided', async () => {
+    const { sut } = makeSut()
+    const request = makeFakeRequest()
+    const response = await sut.handle(request)
+    expect(response).toEqual(ok({ token: 'valid_token' }))
   })
 })
