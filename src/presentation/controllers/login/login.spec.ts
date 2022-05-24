@@ -1,7 +1,6 @@
-import { Authentication } from '../../../domain/use-cases/authentication'
+import { Authentication, EmailValidator, HttpRequest } from './login-protocols'
 import { InvalidParamError, MissingParamError } from '../../erros'
 import { badRequest, serverError, unauthorized } from '../../helpers/http-helper'
-import { EmailValidator, HttpRequest } from '../../protocols'
 import { LoginController } from './login'
 
 class EmailValidatorStub implements EmailValidator {
