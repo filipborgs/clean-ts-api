@@ -55,62 +55,6 @@ describe('SingUp Controller', () => {
     }
   })
 
-  test('should return 400 if no name is provided', async () => {
-    const httpRequest = makeHttpRequest()
-    httpRequest.body.name = null
-    const { sut } = makeSut()
-    const httpResponse: HttpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('name'))
-  })
-
-  test('should return 400 if no email is provided', async () => {
-    const httpRequest = makeHttpRequest()
-    httpRequest.body.email = null
-    const { sut } = makeSut()
-
-    const httpResponse: HttpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('email'))
-  })
-
-  test('should return 400 if no password is provided', async () => {
-    const httpRequest = makeHttpRequest()
-    httpRequest.body.password = null
-    const { sut } = makeSut()
-
-    const httpResponse: HttpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('password'))
-  })
-
-  test('should return 400 if no passwordConfirmation is provided', async () => {
-    const httpRequest = makeHttpRequest()
-    httpRequest.body.passwordConfirmation = null
-    const { sut } = makeSut()
-    const httpResponse: HttpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
-  })
-
-  test('should return 400 if no an email is provided', async () => {
-    const httpRequest = makeHttpRequest()
-    const { sut, emailValidatorStub } = makeSut()
-    httpRequest.body.email = 'invalid_email'
-
-    const emailValidatorSpy = jest.spyOn(emailValidatorStub, 'isValid').mockReturnValue(false)
-
-    const httpResponse: HttpResponse = await sut.handle(httpRequest)
-
-    expect(emailValidatorSpy).toBeCalledWith(httpRequest.body.email)
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('email'))
-  })
-
   test('should call emailValidator with correct email', async () => {
     const httpRequest = makeHttpRequest()
     const { sut, emailValidatorStub } = makeSut()
