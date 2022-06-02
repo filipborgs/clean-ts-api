@@ -2,6 +2,7 @@ import { SingUpController } from './singup'
 import { ServerError, InvalidParamError, MissingParamError } from '../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, EmailValidator } from './singup-protocols'
 import { Validation } from '../../helpers/validators/validation'
+import { badRequest } from '../../helpers/http-helper'
 
 describe('SingUp Controller', () => {
   class EmailValidatorStub implements EmailValidator {
@@ -180,5 +181,13 @@ describe('SingUp Controller', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(httpRequest)
     expect(validateSpy).toBeCalledWith(httpRequest.body)
+  })
+
+  test('should returns 400 if Validation returns an error', async () => {
+    const httpRequest = makeHttpRequest()
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })
