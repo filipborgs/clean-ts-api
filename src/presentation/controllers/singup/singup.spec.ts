@@ -1,6 +1,7 @@
 import { SingUpController } from './singup'
 import { ServerError, InvalidParamError, MissingParamError } from '../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, EmailValidator } from './singup-protocols'
+import { Validation } from '../../helpers/validators/validation'
 
 describe('SingUp Controller', () => {
   class EmailValidatorStub implements EmailValidator {
@@ -21,18 +22,26 @@ describe('SingUp Controller', () => {
     }
   }
 
+  class ValidationStub implements Validation {
+    validate (input: any): Error | null {
+      return null
+    }
+  }
+
   interface sutTypes {
     sut: SingUpController
     emailValidatorStub: EmailValidatorStub
     addAccountStub: AddAccountStub
+    validationStub: Validation
   }
 
   const makeSut = (): sutTypes => {
     const emailValidatorStub = new EmailValidatorStub()
     const addAccountStub = new AddAccountStub()
-    const sut = new SingUpController(emailValidatorStub, addAccountStub)
+    const validationStub = new ValidationStub()
+    const sut = new SingUpController(emailValidatorStub, addAccountStub, validationStub)
     return {
-      sut, emailValidatorStub, addAccountStub
+      sut, emailValidatorStub, addAccountStub, validationStub
     }
   }
 
@@ -163,5 +172,13 @@ describe('SingUp Controller', () => {
     }
     expect(httpResponse.statusCode).toBe(201)
     expect(httpResponse.body).toEqual(account)
+  })
+
+  test('should call Validation with correct value', async () => {
+    const httpRequest = makeHttpRequest()
+    const { sut, validationStub } = makeSut()
+    const validateSpy = jest.spyOn(validationStub, 'validate')
+    await sut.handle(httpRequest)
+    expect(validateSpy).toBeCalledWith(httpRequest.body)
   })
 })
