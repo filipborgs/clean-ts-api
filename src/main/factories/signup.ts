@@ -10,6 +10,6 @@ import { LogControllerDecorator } from '../decorators/log'
 export const makeSignUpController = (): Controller => {
   const singUpController = new SingUpController(
     new EmailValidatorAdapter(),
-    new DbAddAccount(new BcryptAdapter(12), new AccountMongoRepository()))
+    new DbAddAccount(new BcryptAdapter(12), new AccountMongoRepository()), null as any)
   return new LogControllerDecorator(singUpController, new LogMongoErrorRepository())
 }
