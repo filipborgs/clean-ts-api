@@ -1,5 +1,5 @@
 import { SingUpController } from './singup'
-import { ServerError, InvalidParamError } from '../../erros'
+import { ServerError } from '../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, EmailValidator } from './singup-protocols'
 import { Validation } from '../../helpers/validators/validation'
 import { badRequest } from '../../helpers/http-helper'
@@ -80,17 +80,6 @@ describe('SingUp Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError(''))
-  })
-
-  test('should return 400 if password and passwordConfirmation is different', async () => {
-    const httpRequest = makeHttpRequest()
-    httpRequest.body.password = 'anyPassword'
-    httpRequest.body.passwordConfirmation = 'diferentPassword'
-    const { sut } = makeSut()
-    const httpResponse = await sut.handle(httpRequest)
-
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
   })
 
   test('should call AddAccount with correct values', async () => {
