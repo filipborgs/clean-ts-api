@@ -1,5 +1,5 @@
 import { SingUpController } from './singup'
-import { ServerError, InvalidParamError, MissingParamError } from '../../erros'
+import { ServerError, InvalidParamError } from '../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, EmailValidator } from './singup-protocols'
 import { Validation } from '../../helpers/validators/validation'
 import { badRequest } from '../../helpers/http-helper'
@@ -24,8 +24,8 @@ describe('SingUp Controller', () => {
   }
 
   class ValidationStub implements Validation {
-    validate (input: any): Error | null {
-      return null
+    validate (input: any): Error | undefined {
+      return undefined
     }
   }
 

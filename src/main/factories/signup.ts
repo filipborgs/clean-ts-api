@@ -6,10 +6,11 @@ import { SingUpController } from '../../presentation/controllers/singup/singup'
 import { Controller } from '../../presentation/protocols'
 import { EmailValidatorAdapter } from '../../utils/email-validator-adapter'
 import { LogControllerDecorator } from '../decorators/log'
+import { makeSignUpValidation } from './signup-validation'
 
 export const makeSignUpController = (): Controller => {
   const singUpController = new SingUpController(
     new EmailValidatorAdapter(),
-    new DbAddAccount(new BcryptAdapter(12), new AccountMongoRepository()), null as any)
+    new DbAddAccount(new BcryptAdapter(12), new AccountMongoRepository()), makeSignUpValidation())
   return new LogControllerDecorator(singUpController, new LogMongoErrorRepository())
 }
