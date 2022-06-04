@@ -2,12 +2,14 @@ import { Authentication, AuthenticationModel } from '../../../domain/use-cases/a
 import { HashCompare } from '../../protocols/criptography/hash-compare'
 import { TokenGenerator } from '../../protocols/criptography/token-generator'
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
+import { UpdateAccessTokenRepository } from '../../protocols/db/update-access-token-repository'
 
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadAccountByEmail: LoadAccountByEmailRepository,
     private readonly hashCompare: HashCompare,
-    private readonly tokenGenerator: TokenGenerator
+    private readonly tokenGenerator: TokenGenerator,
+    private readonly updateAccessToken: UpdateAccessTokenRepository
   ) {}
 
   async login (authentication: AuthenticationModel): Promise<string | null> {
@@ -18,6 +20,7 @@ export class DbAuthentication implements Authentication {
     if (!isEqual) return null
 
     const token = await this.tokenGenerator.generate(account.id)
+    await this.updateAccessToken.update(account.id, token)
     return token
   }
 }
