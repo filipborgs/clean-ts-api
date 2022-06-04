@@ -1,7 +1,7 @@
 import { SingUpController } from './singup'
 import { ServerError } from '../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse } from './singup-protocols'
-import { Validation } from '../../helpers/validators/validation'
+import { Validation } from '../../protocols/validation'
 import { badRequest } from '../../helpers/http/http-helper'
 
 describe('SingUp Controller', () => {
