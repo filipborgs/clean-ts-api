@@ -120,4 +120,10 @@ describe('DbAuthentication UseCase', () => {
     const result = sut.login(makeFakeAuthentication())
     await expect(result).rejects.toThrow()
   })
+
+  test('should return a token if HashComparer retuns a token', async () => {
+    const { sut } = makeSut()
+    const token = await sut.login(makeFakeAuthentication())
+    expect(token).toEqual('valid_token')
+  })
 })
