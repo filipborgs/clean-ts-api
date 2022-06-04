@@ -14,7 +14,7 @@ describe('DbAuthentication UseCase', () => {
 
   const makeHashCompareStub = (): HashCompare => {
     class HashCompareStub implements HashCompare {
-      compare (value: string, hash: string): boolean { return true }
+      async compare (value: string, hash: string): Promise<boolean> { return true }
     }
     return new HashCompareStub()
   }
@@ -82,5 +82,12 @@ describe('DbAuthentication UseCase', () => {
     jest.spyOn(hashComparerStub, 'compare').mockImplementationOnce(() => { throw new Error() })
     const result = sut.login(makeFakeAuthentication())
     await expect(result).rejects.toThrow()
+  })
+
+  test('should return null if HashComparer retuns false', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    jest.spyOn(hashComparerStub, 'compare').mockResolvedValueOnce(false)
+    const token = await sut.login(makeFakeAuthentication())
+    expect(token).toBeNull()
   })
 })
