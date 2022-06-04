@@ -1,9 +1,9 @@
-import { Authentication, HttpRequest, Validation } from './login-protocols'
+import { Authentication, HttpRequest, Validation, AuthenticationModel } from './login-protocols'
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http/http-helper'
 import { LoginController } from './login'
 
 class AuthenticationStub implements Authentication {
-  async login (email: string, password: string): Promise<string | null> {
+  async login (authentication: AuthenticationModel): Promise<string | null> {
     return 'valid_token'
   }
 }
@@ -52,7 +52,8 @@ describe('Login Controller', () => {
     const request = makeFakeRequest()
     const loginSpy = jest.spyOn(authenticationStub, 'login')
     await sut.handle(request)
-    expect(loginSpy).toBeCalledWith(request.body.email, request.body.password)
+    const { email, password } = request.body
+    expect(loginSpy).toBeCalledWith({ email, password })
   })
 
   test('Should return 401 if an invlid credentials are provided', async () => {
