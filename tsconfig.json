@@ -1,11 +1,17 @@
 {
     "compilerOptions": {
-        "outDir": "./dist",
+        "outDir": "dist",
         "module": "commonjs",
         "target": "es2019",
         "esModuleInterop": true,
-        "allowJs": true,
         "strictNullChecks": true,
         "moduleResolution": "Node"
-    }
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "**/*.spec.ts",
+        "**/*.test.ts"
+    ]
 }
