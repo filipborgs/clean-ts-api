@@ -1,8 +1,10 @@
 import request from 'supertest'
+import { BcryptAdapter } from '../../infra/criptography/bcrypt-adapter/bcrypt-adapter'
 import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
 
 describe('Login Routes', () => {
+  let accountCollection
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
   })
@@ -12,8 +14,8 @@ describe('Login Routes', () => {
   })
 
   beforeEach(async () => {
-    const accounts = await MongoHelper.getCollection('accounts')
-    await accounts.deleteMany({})
+    accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
   })
 
   describe('POST /singup', () => {
@@ -24,6 +26,23 @@ describe('Login Routes', () => {
         password: '123',
         passwordConfirmation: '123'
       }).expect(201)
+    })
+  })
+
+  describe('POST /login', () => {
+    test('Should return 200 on login', async () => {
+      const bcrypt = new BcryptAdapter(12)
+      const password = await bcrypt.hash('123')
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'mail@mail.com',
+        password
+      })
+
+      await request(app).post('/api/login').send({
+        email: 'mail@mail.com',
+        password: '123'
+      }).expect(200)
     })
   })
 })
