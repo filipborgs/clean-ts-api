@@ -5,7 +5,8 @@
         "target": "es2019",
         "esModuleInterop": true,
         "strictNullChecks": true,
-        "moduleResolution": "Node"
+        "moduleResolution": "Node",
+        "sourceMap": true
     },
     "include": [
         "src"
