@@ -32,7 +32,7 @@ describe('DbAuthentication UseCase', () => {
 
   const makeUpdateAccessTokenRepositoryStub = (): UpdateAccessTokenRepository => {
     class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-      async update (id: string, token: string): Promise<void> { }
+      async updateAccessToken (id: string, token: string): Promise<void> { }
     }
     return new UpdateAccessTokenRepositoryStub()
   }
@@ -143,7 +143,7 @@ describe('DbAuthentication UseCase', () => {
 
   test('should call UpdateAccessTokenRepository with correct values', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
+    const updateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
     const authAccount = makeFakeAuthentication()
     await sut.login(authAccount)
     expect(updateSpy).toBeCalledWith('any_id', 'valid_token')
@@ -151,7 +151,7 @@ describe('DbAuthentication UseCase', () => {
 
   test('should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    jest.spyOn(updateAccessTokenRepositoryStub, 'update').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockImplementationOnce(() => { throw new Error() })
     const result = sut.login(makeFakeAuthentication())
     await expect(result).rejects.toThrow()
   })

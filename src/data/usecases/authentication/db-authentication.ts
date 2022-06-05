@@ -23,7 +23,7 @@ export class DbAuthentication implements Authentication {
     if (!isEqual) return null
 
     const token = await this.tokenGenerator.generate(account.id)
-    await this.updateAccessToken.update(account.id, token)
+    await this.updateAccessToken.updateAccessToken(account.id, token)
     return token
   }
 }
