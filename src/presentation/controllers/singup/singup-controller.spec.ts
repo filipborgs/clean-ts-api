@@ -94,7 +94,7 @@ describe('SingUp Controller', () => {
       password
     }
     expect(httpResponse.statusCode).toBe(201)
-    expect(httpResponse.body).toEqual(account)
+    expect(httpResponse.body).toEqual({ account, token: 'valid_token' })
   })
 
   test('should call Validation with correct value', async () => {
