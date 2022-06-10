@@ -19,9 +19,9 @@ export class SingUpController implements Controller {
 
       const account: AccountModel = await this.addAccount.add({ name, email, password })
 
-      await this.authentication.login({ email, password })
+      const token = await this.authentication.login({ email, password })
 
-      return created(account)
+      return created({ account, token })
     } catch (error) {
       return serverError(error)
     }
