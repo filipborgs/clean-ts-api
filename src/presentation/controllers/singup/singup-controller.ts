@@ -1,4 +1,5 @@
-import { badRequest, created, serverError } from '../../helpers/http/http-helper'
+import { AlreadyInUseError } from '../../erros'
+import { badRequest, created, forbidden, serverError } from '../../helpers/http/http-helper'
 import { Authentication } from '../login/login-controller-protocols'
 import { AddAccount, HttpRequest, HttpResponse, Controller, AccountModel, Validation } from './singup-controller-protocols'
 
@@ -18,6 +19,7 @@ export class SingUpController implements Controller {
       const { name, email, password } = httpRequest.body
 
       const account: AccountModel = await this.addAccount.add({ name, email, password })
+      if (!account) return forbidden(new AlreadyInUseError('email'))
 
       const token = await this.authentication.login({ email, password })
 
