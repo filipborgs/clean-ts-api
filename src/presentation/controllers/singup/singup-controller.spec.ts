@@ -1,8 +1,8 @@
 import { SingUpController } from './singup-controller'
-import { ServerError } from '../../erros'
+import { AlreadyInUseError, ServerError } from '../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse } from './singup-controller-protocols'
 import { Validation } from '../../protocols/validation'
-import { badRequest, serverError } from '../../helpers/http/http-helper'
+import { badRequest, forbidden, serverError } from '../../helpers/http/http-helper'
 import { Authentication, AuthenticationModel } from '../login/login-controller-protocols'
 
 describe('SingUp Controller', () => {
@@ -103,6 +103,14 @@ describe('SingUp Controller', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(httpRequest)
     expect(validateSpy).toBeCalledWith(httpRequest.body)
+  })
+
+  test('should returns 403 if AddAccount returns null', async () => {
+    const httpRequest = makeHttpRequest()
+    const { sut, addAccountStub } = makeSut()
+    jest.spyOn(addAccountStub, 'add').mockResolvedValueOnce(null as any)
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(forbidden(new AlreadyInUseError('email')))
   })
 
   test('should returns 400 if Validation returns an error', async () => {
