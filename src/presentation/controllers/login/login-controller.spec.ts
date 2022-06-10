@@ -2,13 +2,13 @@ import { Authentication, HttpRequest, Validation, AuthenticationModel } from './
 import { badRequest, ok, serverError, unauthorized } from '../../helpers/http/http-helper'
 import { LoginController } from './login-controller'
 
-class AuthenticationStub implements Authentication {
-  async login (authentication: AuthenticationModel): Promise<string | null> {
-    return 'valid_token'
+const makeAuthenticationStub = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async login (authentication: AuthenticationModel): Promise<string | null> {
+      return 'valid_token'
+    }
   }
-}
 
-const makeAuthenticationStub = (): AuthenticationStub => {
   const authenticationStub = new AuthenticationStub()
   return authenticationStub
 }
