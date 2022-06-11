@@ -1,4 +1,4 @@
-import { Validation } from '../../protocols'
+import { Validation } from '../../presentation/protocols/validation'
 import { ValidationComposite } from './validation-composite'
 
 describe('ValidationComposite', () => {

@@ -1,5 +1,5 @@
-import { InvalidParamError } from '../../erros'
-import { EmailValidator } from '../../protocols'
+import { InvalidParamError } from '../../presentation/erros'
+import { EmailValidator } from '../protocols'
 import { EmailFieldValidation } from './email-field-validation'
 
 describe('EmailFieldValidation', () => {
