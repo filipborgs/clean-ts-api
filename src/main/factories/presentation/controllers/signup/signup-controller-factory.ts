@@ -2,7 +2,7 @@ import { LogMongoErrorRepository } from '../../../../../infra/db/mongodb/log/log
 import { SingUpController } from '../../../../../presentation/controllers/singup/singup-controller'
 import { Controller } from '../../../../../presentation/protocols'
 import { LogControllerDecorator } from '../../../../decorators/log-controller-decorator'
-import { makeDbAddAccount } from '../../../data/usecases/db-add-account-factory'
+import { makeDbAddAccount } from '../../../data/usecases/db-add-account-facotry'
 import { makeDbAuthentication } from '../../../data/usecases/db-authentication-factory'
 import { makeSignUpValidation } from './signup-validation-factory'
 

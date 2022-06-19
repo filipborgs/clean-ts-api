@@ -10,7 +10,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: teste
       MONGO_INITDB_ROOT_PASSWORD: teste
     volumes:
-      - ./data:/data/db
+      - ./data-db:/data/db
     ports:
       - "22222:27017"
     networks:
