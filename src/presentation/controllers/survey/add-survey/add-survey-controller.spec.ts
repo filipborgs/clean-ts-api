@@ -1,3 +1,4 @@
+import { serverError } from '../../../helpers/http/http-helper'
 import { HttpRequest, Validation } from '../../../protocols'
 import { AddSurveyController } from './add-survey-controller'
 
@@ -41,5 +42,12 @@ describe('AddSurveyController', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  it('Should return 500 if Validate thorws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error('any_error') })
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new Error('any_error')))
   })
 })
