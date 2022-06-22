@@ -1,9 +1,7 @@
 import { AuthMiddleware } from './auth-middleware'
 import { forbidden, ok, serverError } from '../helpers/http/http-helper'
 import { AccessDeniedError } from '../erros'
-import { LoadAccountByToken } from '../../domain/use-cases'
-import { AccountModel } from '../../domain/models'
-import { HttpRequest } from '../protocols'
+import { LoadAccountByToken, HttpRequest, AccountModel } from './auth-middleware-protocols'
 
 describe('Auth Middleware', () => {
   interface SutTypes {
