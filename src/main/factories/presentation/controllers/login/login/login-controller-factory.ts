@@ -2,7 +2,7 @@ import { LogMongoErrorRepository } from '../../../../../../infra/db/mongodb/log/
 import { LoginController } from '../../../../../../presentation/controllers/login/login/login-controller'
 import { Controller } from '../../../../../../presentation/protocols'
 import { LogControllerDecorator } from '../../../../../decorators/log-controller-decorator'
-import { makeDbAuthentication } from '../../../../data/usecases/db-authentication-factory'
+import { makeDbAuthentication } from '../../../../data/usecases/authentication/db-authentication-factory'
 import { makeLoginValidation } from './login-validation-factory'
 
 export const makeLoginController = (): Controller => {
