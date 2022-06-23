@@ -49,7 +49,7 @@ describe('Account Mongo Repository', () => {
     expect(account?.password).toBe('any_password')
   })
 
-  it('should return an account on loadByEmail fails', async () => {
+  it('should not return an account on loadByEmail fails', async () => {
     const sut = makeSut()
     const account = await sut.loadByEmail('any_email')
     expect(account).toBeFalsy()
@@ -66,5 +66,24 @@ describe('Account Mongo Repository', () => {
     const account = await accountCollection.findOne({ _id: insertedId })
     expect(account).toBeTruthy()
     expect(account?.accessToken).toBe('any_token')
+  })
+
+  describe('loadByToken', () => {
+    it('should return an account on loadByToken without role', async () => {
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token'
+      })
+      const sut = makeSut()
+      const account = await sut.loadByToken('any_token')
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+      expect(account?.name).toBe('any_name')
+      expect(account?.email).toBe('any_email')
+      expect(account?.password).toBe('any_password')
+      expect(account?.accessToken).toBe('any_token')
+    })
   })
 })
