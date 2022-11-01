@@ -5,7 +5,7 @@ import { forbidden, ok, serverError } from '../helpers/http/http-helper'
 export class AuthMiddleware implements Middleware {
   constructor (
     private readonly loadAccountByToken: LoadAccountByToken,
-    private readonly role: string
+    private readonly role: string | undefined
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
