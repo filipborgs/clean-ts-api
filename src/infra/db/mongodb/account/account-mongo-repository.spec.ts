@@ -92,22 +92,53 @@ describe('Account Mongo Repository', () => {
       expect(account?.accessToken).toBe('any_token')
     })
 
-    it('should return an account on loadByToken with role', async () => {
+    it('should return an account on loadByToken with admin role', async () => {
       await accountCollection.insertOne({
         name: 'any_name',
         email: 'any_email',
         password: 'any_password',
         accessToken: 'any_token',
-        role: 'any_role'
+        role: 'admin'
       })
       const sut = makeSut()
-      const account = await sut.loadByToken('any_token', 'any_role')
+      const account = await sut.loadByToken('any_token', 'admin')
       expect(account).toBeTruthy()
       expect(account?.id).toBeTruthy()
       expect(account?.name).toBe('any_name')
       expect(account?.email).toBe('any_email')
       expect(account?.password).toBe('any_password')
       expect(account?.accessToken).toBe('any_token')
+    })
+
+    it('should return an account on loadByToken with admin role', async () => {
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token',
+        role: 'admin'
+      })
+      const sut = makeSut()
+      const account = await sut.loadByToken('any_token')
+      expect(account).toBeTruthy()
+      expect(account?.id).toBeTruthy()
+      expect(account?.name).toBe('any_name')
+      expect(account?.email).toBe('any_email')
+      expect(account?.password).toBe('any_password')
+      expect(account?.accessToken).toBe('any_token')
+    })
+
+    it('should return null on loadByToken with invalid role', async () => {
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        accessToken: 'any_token',
+        role: 'teste'
+      })
+      const sut = makeSut()
+      const account = await sut.loadByToken('any_token', 'admin')
+      expect(account).toBeFalsy()
     })
 
     it('should return null on loadByToken fails', async () => {
