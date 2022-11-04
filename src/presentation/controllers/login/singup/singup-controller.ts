@@ -1,5 +1,5 @@
-import { AlreadyInUseError } from '../../erros'
-import { badRequest, created, forbidden, serverError } from '../../helpers/http/http-helper'
+import { AlreadyInUseError } from '../../../erros'
+import { badRequest, created, forbidden, serverError } from '../../../helpers/http/http-helper'
 import { Authentication } from '../login/login-controller-protocols'
 import { AddAccount, HttpRequest, HttpResponse, Controller, Validation } from './singup-controller-protocols'
 

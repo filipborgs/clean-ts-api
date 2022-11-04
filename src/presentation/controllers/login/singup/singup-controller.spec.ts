@@ -1,8 +1,8 @@
 import { SingUpController } from './singup-controller'
-import { AlreadyInUseError, ServerError } from '../../erros'
+import { AlreadyInUseError, ServerError } from '../../../erros'
 import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse } from './singup-controller-protocols'
-import { Validation } from '../../protocols/validation'
-import { badRequest, forbidden, serverError } from '../../helpers/http/http-helper'
+import { Validation } from '../../../protocols/validation'
+import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
 import { Authentication, AuthenticationModel } from '../login/login-controller-protocols'
 
 describe('SingUp Controller', () => {
