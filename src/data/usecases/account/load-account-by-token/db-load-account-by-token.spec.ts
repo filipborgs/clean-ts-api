@@ -1,7 +1,6 @@
 import { DbLoadAccountByToken } from './db-load-account-by-token'
-import { Decrypter } from '../../protocols/criptography/decrypter'
-import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
-import { AccountModel } from '../add-account/db-add-account-protocols'
+import { Decrypter, LoadAccountByTokenRepository, AccountModel }
+  from './db-load-account-by-token-protocols'
 
 describe('DbLoadAccountByToken', () => {
   interface SutTypes {
@@ -43,7 +42,8 @@ describe('DbLoadAccountByToken', () => {
     id: 'any_id',
     name: 'any_name',
     email: 'any_email',
-    password: 'hashed_password'
+    password: 'hashed_password',
+    accessToken: 'any'
   })
 
   test('Should call Decrypter with correct value', async () => {
