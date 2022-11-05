@@ -1,11 +1,11 @@
 export interface SurveyModel {
   id: string
   question: string
-  answers: SurveyAnswerModel[]
+  answers: SurveyAnswer[]
   date: Date
 }
 
-export interface SurveyAnswerModel {
+export interface SurveyAnswer {
   image?: string
   answer: string
 }

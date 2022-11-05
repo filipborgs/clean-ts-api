@@ -1,7 +1,9 @@
-import { SurveyModel } from '../../../../domain/models/survey'
-import { LoadSurvey } from '../../../../domain/use-cases/survey/load-surveys'
 import { LoadSurveyController } from './load-survey-controller'
-import { serverError, ok } from '../../../helpers/http/http-helper'
+import {
+  LoadSurvey,
+  SurveyModel,
+  serverError, ok
+} from './load-survey-protocols'
 
 describe('LoadSurveyController', () => {
   const makeLoadSurveyStub = (): LoadSurvey => {
