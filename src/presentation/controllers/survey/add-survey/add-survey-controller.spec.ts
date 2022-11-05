@@ -25,6 +25,7 @@ describe('AddSurveyController', () => {
   }
 
   const makeSut = (): SutTypes => {
+    jest.useFakeTimers()
     const validationStub = makeValidationStub()
     const addSurveyStub = makeAddSurveyStub()
     const sut = new AddSurveyController(validationStub, addSurveyStub)
@@ -41,7 +42,8 @@ describe('AddSurveyController', () => {
       answers: [{
         image: 'any_image',
         answer: 'any_answer'
-      }]
+      }],
+      date: new Date()
     }
   })
 

@@ -28,7 +28,8 @@ describe('DbAddSurvey UseCase', () => {
     answers: [{
       image: 'any_image',
       answer: 'any_answer'
-    }]
+    }],
+    date: new Date()
   })
 
   test('Should call AddSurveyRepository with correct values', async () => {
