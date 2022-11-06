@@ -10,13 +10,14 @@ describe('DbLoadSurveys', () => {
   const makeLoadSurveysRepositoryStub = (): LoadSurveysRepository => {
     class LoadSurveysRepositoryStub implements LoadSurveysRepository {
       async load (): Promise<SurveyModel[]> {
-        return null as any
+        return makeFakeSurveys()
       }
     }
     return new LoadSurveysRepositoryStub()
   }
 
   const makeSut = (): SutTypes => {
+    jest.useFakeTimers()
     const loadSurveyRepositoryStub = makeLoadSurveysRepositoryStub()
     const sut = new DbLoadSurveys(loadSurveyRepositoryStub)
     return {
@@ -24,6 +25,16 @@ describe('DbLoadSurveys', () => {
       loadSurveyRepositoryStub
     }
   }
+
+  const makeFakeSurveys = (): SurveyModel[] => ([
+    {
+      id: 'any_id',
+      question: 'anu_question',
+      date: new Date(),
+      answers: []
+    }
+  ])
+
   test('Should calls LoadSurveysRepository with no values', async () => {
     const { sut, loadSurveyRepositoryStub } = makeSut()
     const loadSpy = jest.spyOn(loadSurveyRepositoryStub, 'load')
@@ -36,5 +47,11 @@ describe('DbLoadSurveys', () => {
     const error = new Error('any_error')
     jest.spyOn(loadSurveyRepositoryStub, 'load').mockImplementationOnce(() => { throw error })
     await expect(sut.load()).rejects.toThrow(error)
+  })
+
+  test('Should return corret values on sucess', async () => {
+    const { sut } = makeSut()
+    const surveys = await sut.load()
+    expect(surveys).toEqual(makeFakeSurveys())
   })
 })
