@@ -62,5 +62,11 @@ describe('SurveyMongoRepository', () => {
       expect(survey2.date).toBeTruthy()
       expect(survey2.question).toEqual('any_question2')
     })
+
+    test('Should return an empty array if collection is empty', async () => {
+      const sut = makeSut()
+      const surveys = await sut.load()
+      expect(surveys).toEqual([])
+    })
   })
 })

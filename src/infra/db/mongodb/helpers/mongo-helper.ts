@@ -46,7 +46,7 @@ export const MongoHelper = {
         id: _id.toString()
       }))
     }
-    return null
+    return []
   }
 
 }
