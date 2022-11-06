@@ -22,6 +22,18 @@ describe('Survey Routes', () => {
     await accountCollection.deleteMany({})
   })
 
+  const makeUser = async (role?): Promise<string> => {
+    const { insertedId: id } = await accountCollection.insertOne({
+      name: 'Filipe',
+      email: 'filipborgs48@gmail.com',
+      password: 'password',
+      role
+    })
+    const accessToken = sign({ id }, env.jwtSecret)
+    await accountCollection.updateOne({ _id: id }, { $set: { accessToken } })
+    return accessToken
+  }
+
   describe('POST /surveys', () => {
     test('Should return 403 on add survey without access token', async () => {
       await request(app).post('/api/surveys').send({
@@ -37,15 +49,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on add survey with valid access token', async () => {
-      const { insertedId: id } = await accountCollection.insertOne({
-        name: 'Filipe',
-        email: 'filipborgs48@gmail.com',
-        password: 'password',
-        role: 'admin'
-      })
-      const accessToken = sign({ id }, env.jwtSecret)
-      console.log(id)
-      await accountCollection.updateOne({ _id: id }, { $set: { accessToken } })
+      const accessToken = await makeUser('admin')
 
       await request(app).post('/api/surveys').set('x-access-token', accessToken).send({
         question: 'Question',
@@ -61,8 +65,34 @@ describe('Survey Routes', () => {
   })
 
   describe('GET /surveys', () => {
-    test('Should return 403 on add survey without access token', async () => {
+    const makeFakeSurveys = (): any => ([
+      {
+        question: 'any_question',
+        date: new Date(),
+        answers: []
+      },
+      {
+        question: 'any_question2',
+        date: new Date(),
+        answers: []
+      }
+    ])
+
+    test('Should return 403 on load surveys without access token', async () => {
       await request(app).get('/api/surveys').send().expect(403)
+    })
+
+    test('Should return 204 if has no surveys', async () => {
+      const accessToken = await makeUser()
+
+      await request(app).get('/api/surveys').set('x-access-token', accessToken).send().expect(204)
+    })
+
+    test('Should return 200 with surveys', async () => {
+      await surveyCollection.insertMany(makeFakeSurveys())
+      const accessToken = await makeUser()
+
+      await request(app).get('/api/surveys').set('x-access-token', accessToken).send().expect(200)
     })
   })
 })
