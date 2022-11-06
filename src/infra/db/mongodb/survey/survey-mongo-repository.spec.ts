@@ -35,7 +35,32 @@ describe('SurveyMongoRepository', () => {
     })
   })
 
-  // describe('load', ()=> {
+  describe('load', () => {
+    const makeFakeSurveys = (): any => ([
+      {
+        question: 'any_question',
+        date: new Date(),
+        answers: []
+      },
+      {
+        question: 'any_question2',
+        date: new Date(),
+        answers: []
+      }
+    ])
 
-  // })
+    test('Should return an array of surveys if succeeds', async () => {
+      await surveyCollection.insertMany(makeFakeSurveys())
+      const sut = makeSut()
+      const surveys = await sut.load()
+      expect(surveys).toBeTruthy()
+      const [survey, survey2] = surveys
+      expect(survey.id).toBeTruthy()
+      expect(survey.date).toBeTruthy()
+      expect(survey.question).toEqual('any_question')
+      expect(survey2.id).toBeTruthy()
+      expect(survey2.date).toBeTruthy()
+      expect(survey2.question).toEqual('any_question2')
+    })
+  })
 })

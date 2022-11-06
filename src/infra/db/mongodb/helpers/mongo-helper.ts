@@ -37,6 +37,16 @@ export const MongoHelper = {
       }
     }
     return null
+  },
+
+  mapArray (array: any) {
+    if (array?.length) {
+      return array.map(({ _id, ...data }) => ({
+        ...data,
+        id: _id.toString()
+      }))
+    }
+    return null
   }
 
 }
