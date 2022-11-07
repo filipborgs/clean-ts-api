@@ -1,9 +1,8 @@
 import { SingUpController } from './singup-controller'
-import { AlreadyInUseError, ServerError } from '../../../erros'
-import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse } from './singup-controller-protocols'
-import { Validation } from '../../../protocols/validation'
-import { badRequest, forbidden, serverError } from '../../../helpers/http/http-helper'
-import { Authentication, AuthenticationModel } from '../login/login-controller-protocols'
+import { AlreadyInUseError, ServerError } from '@/presentation/erros'
+import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, Authentication, AuthenticationModel } from './singup-controller-protocols'
+import { Validation } from '@/presentation/protocols/validation'
+import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
 
 describe('SingUp Controller', () => {
   const makeAuthenticationStub = (): Authentication => {

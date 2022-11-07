@@ -1,6 +1,6 @@
-import { InvalidParamError } from '../../presentation/erros'
-import { EmailValidator } from '../protocols'
+import { InvalidParamError } from '@/presentation/erros'
 import { EmailFieldValidation } from './email-field-validation'
+import { EmailValidator } from '@/validation/protocols'
 
 describe('EmailFieldValidation', () => {
   class EmailValidatorStub implements EmailValidator {

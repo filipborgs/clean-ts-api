@@ -1,7 +1,6 @@
-import { AlreadyInUseError } from '../../../erros'
-import { badRequest, created, forbidden, serverError } from '../../../helpers/http/http-helper'
-import { Authentication } from '../login/login-controller-protocols'
-import { AddAccount, HttpRequest, HttpResponse, Controller, Validation } from './singup-controller-protocols'
+import { AlreadyInUseError } from '@/presentation/erros'
+import { badRequest, created, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { AddAccount, Authentication, HttpRequest, HttpResponse, Controller, Validation } from './singup-controller-protocols'
 
 export class SingUpController implements Controller {
   constructor (

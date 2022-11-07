@@ -1,9 +1,9 @@
-import { LogMongoErrorRepository } from '../../../../../../infra/db/mongodb/log/log-repository'
-import { SingUpController } from '../../../../../../presentation/controllers/login/singup/singup-controller'
-import { Controller } from '../../../../../../presentation/protocols'
-import { LogControllerDecorator } from '../../../../../decorators/log-controller-decorator'
-import { makeDbAddAccount } from '../../../../data/usecases/account/db-add-account-facotry'
-import { makeDbAuthentication } from '../../../../data/usecases/authentication/db-authentication-factory'
+import { LogMongoErrorRepository } from '@/infra/db/mongodb/log/log-repository'
+import { LogControllerDecorator } from '@/main/decorators/log-controller-decorator'
+import { makeDbAddAccount } from '@/main/factories/data/usecases/account/db-add-account-facotry'
+import { makeDbAuthentication } from '@/main/factories/data/usecases/authentication/db-authentication-factory'
+import { SingUpController } from '@/presentation/controllers/login/singup/singup-controller'
+import { Controller } from '@/presentation/protocols'
 import { makeSignUpValidation } from './signup-validation-factory'
 
 export const makeSignUpController = (): Controller => {
