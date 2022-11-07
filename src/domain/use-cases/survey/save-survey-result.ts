@@ -7,6 +7,6 @@ export interface SaveSurveyResultModel {
   answer: string
 }
 
-export interface SaveSurvey {
+export interface SaveSurveyResult {
   save: (data: SaveSurveyResultModel) => Promise<SurveyResultModel>
 }
