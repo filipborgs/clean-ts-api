@@ -82,5 +82,11 @@ describe('SurveyMongoRepository', () => {
       expect(survey.date).toBeTruthy()
       expect(survey.question).toEqual('any_question')
     })
+
+    test('Should return null if the id dont exists', async () => {
+      const sut = makeSut()
+      const surveys = await sut.loadById('63699b39ba63d49014cd0b05')
+      expect(surveys).toEqual(null)
+    })
   })
 })

@@ -25,6 +25,7 @@ describe('LoadSurveyController', () => {
   ])
 
   const makeSut = (): SutTypes => {
+    jest.useFakeTimers()
     const loadSurvey = makeLoadSurveyStub()
     const sut = new LoadSurveyController(loadSurvey)
     return {

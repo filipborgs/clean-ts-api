@@ -17,6 +17,7 @@ describe('DbSaveSurveyResult UseCase', () => {
   }
 
   const makeSut = (): SutTypes => {
+    jest.useFakeTimers()
     const saveSurveyResultRepositoryStub = makeSaveSurveyResultRepositoryStub()
     const sut = new DbSaveSurveyResult(saveSurveyResultRepositoryStub)
     return {
