@@ -27,7 +27,9 @@ describe('SaveSurveyResultController', () => {
       id: 'any_id',
       question: 'anu_question',
       date: new Date(),
-      answers: []
+      answers: [{
+        answer: 'valid_answer'
+      }]
     }
   )
 
@@ -52,6 +54,9 @@ describe('SaveSurveyResultController', () => {
   const makeFakeRequest = (): HttpRequest => ({
     params: {
       surveyId: 'any_id'
+    },
+    body: {
+      answer: 'valid_answer'
     }
   })
 
@@ -76,5 +81,16 @@ describe('SaveSurveyResultController', () => {
     jest.spyOn(loadSurveyByIdStub, 'loadById').mockImplementation(() => { throw error })
     const response = await sut.handle(makeFakeRequest())
     expect(response).toEqual(serverError(error))
+  })
+
+  test('Should return 403 if an invalid answer is provided', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      ...makeFakeRequest(),
+      body: {
+        answer: 'wrong_value'
+      }
+    })
+    expect(httpResponse).toEqual(forbidden(new InvalidParamError('answer')))
   })
 })
