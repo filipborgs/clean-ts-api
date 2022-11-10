@@ -1,12 +1,12 @@
 import { HttpRequest, LoadSurveyById, SaveSurveyResultModel, SurveyModel, SurveyResultModel } from '../login/singup/singup-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
-import { forbidden, InvalidParamError, SaveSurveyResult, serverError } from './save-survey-result-controller-protocols'
+import { forbidden, InvalidParamError, ok, SaveSurveyResult, serverError } from './save-survey-result-controller-protocols'
 
 describe('SaveSurveyResultController', () => {
   const makeSaveSurveyResultStub = (): SaveSurveyResult => {
     class SaveSurveyResultStub implements SaveSurveyResult {
       async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
-        return null as any
+        return makeFakeSurveyResult()
       }
     }
 
@@ -30,6 +30,16 @@ describe('SaveSurveyResultController', () => {
       answers: [{
         answer: 'valid_answer'
       }]
+    }
+  )
+
+  const makeFakeSurveyResult = (): SurveyResultModel => (
+    {
+      id: 'any_id',
+      answer: 'valid_answer',
+      date: new Date(),
+      surveyId: 'any_id',
+      accountId: 'any_id'
     }
   )
 
@@ -116,5 +126,14 @@ describe('SaveSurveyResultController', () => {
     jest.spyOn(saveSurveyResultStub, 'save').mockImplementation(() => { throw error })
     const response = await sut.handle(makeFakeRequest())
     expect(response).toEqual(serverError(error))
+  })
+
+  test('Should return 200 on sucess', async () => {
+    const { sut } = makeSut()
+    const response = await sut.handle(makeFakeRequest())
+    const surveyResult = makeFakeSurveyResult()
+    expect(response).toEqual(ok({
+      surveyResult
+    }))
   })
 })
