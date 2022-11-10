@@ -5,6 +5,6 @@ import { makeAuthMiddleware } from '@/main/factories/middlewares/auth-middleware
 import { makeSaveSurveyResultController } from '../factories/presentation/controllers/survey-result/save-survey-result-controller'
 
 export default (router: Router): void => {
-  const adminAuth = adaptMiddleware(makeAuthMiddleware('admin'))
-  router.put('/surveys/:surveyId/results', adminAuth, adaptRoute(makeSaveSurveyResultController()))
+  const auth = adaptMiddleware(makeAuthMiddleware())
+  router.put('/surveys/:surveyId/results', auth, adaptRoute(makeSaveSurveyResultController()))
 }

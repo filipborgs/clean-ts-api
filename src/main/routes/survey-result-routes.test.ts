@@ -3,12 +3,13 @@ import request from 'supertest'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import app from '@/main/config/app'
 import env from '@/main/config/env'
+import { SurveyModel } from '@/domain/models'
 describe('Survey Routes', () => {
   let surveyCollection
   let accountCollection
 
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   afterAll(async () => {
@@ -34,28 +35,34 @@ describe('Survey Routes', () => {
     return accessToken
   }
 
-  describe('PUT /surveys/:surveyId/results', () => {
-    console.log(makeUser)
+  const makeSurvey = async (): Promise<SurveyModel> => {
+    const survey = {
+      question: 'any_question',
+      date: new Date(),
+      answers: [{
+        image: 'http://image.com',
+        answer: 'answer 1'
+      },
+      {
+        answer: 'answer 2'
+      }]
+    }
+    const { insertedId: id } = await surveyCollection.insertOne({ ...survey })
+    return MongoHelper.mapInserted(survey, id)
+  }
 
+  describe('PUT /surveys/:surveyId/results', () => {
     test('Should return 403 on save survey result without access token', async () => {
       await request(app).put('/api/surveys/any_id/results').send({
         answer: 'answer'
       }).expect(403)
     })
 
-    // test('Should return 204 on add survey with valid access token', async () => {
-    //   const accessToken = await makeUser('admin')
-
-    //   await request(app).post('/api/surveys').set('x-access-token', accessToken).send({
-    //     question: 'Question',
-    //     answers: [{
-    //       image: 'http://image.com',
-    //       answer: 'answer 1'
-    //     },
-    //     {
-    //       answer: 'answer 2'
-    //     }]
-    //   }).expect(204)
-    // })
+    test('Should return 200 on save survey with valid access token', async () => {
+      const [accessToken, survey] = await Promise.all([makeUser(), makeSurvey()])
+      await request(app).put(`/api/surveys/${survey.id}/results`).set('x-access-token', accessToken).send({
+        answer: survey.answers[0].answer
+      }).expect(200)
+    })
   })
 })
