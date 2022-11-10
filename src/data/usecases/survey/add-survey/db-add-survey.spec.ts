@@ -7,7 +7,7 @@ describe('DbAddSurvey UseCase', () => {
     addSurveyRepositoryStub: AddSurveyRepository
   }
 
-  const makeAddSurveyRepositoryStub = (): AddSurveyRepository => {
+  const mockAddSurveyRepositoryStub = (): AddSurveyRepository => {
     class AddSurveyRepositoryStub implements AddSurveyRepository {
       async add (data: AddSurveyParams): Promise<void> { }
     }
@@ -15,7 +15,7 @@ describe('DbAddSurvey UseCase', () => {
   }
 
   const makeSut = (): SutTypes => {
-    const addSurveyRepositoryStub = makeAddSurveyRepositoryStub()
+    const addSurveyRepositoryStub = mockAddSurveyRepositoryStub()
     const sut = new DbAddSurvey(addSurveyRepositoryStub)
     return {
       sut,
@@ -23,7 +23,7 @@ describe('DbAddSurvey UseCase', () => {
     }
   }
 
-  const makeFakeData = (): AddSurveyParams => ({
+  const mockFakeData = (): AddSurveyParams => ({
     question: 'any_question',
     answers: [{
       image: 'any_image',
@@ -35,7 +35,7 @@ describe('DbAddSurvey UseCase', () => {
   test('Should call AddSurveyRepository with correct values', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
-    const data = makeFakeData()
+    const data = mockFakeData()
     await sut.add(data)
     expect(addSpy).toBeCalledWith(data)
   })
@@ -43,7 +43,7 @@ describe('DbAddSurvey UseCase', () => {
   test('Should throw if AddSurveyRepository throws', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
     jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(() => { throw new Error('any_error') })
-    const promise = sut.add(makeFakeData())
+    const promise = sut.add(mockFakeData())
     await expect(promise).rejects.toThrow(new Error('any_error'))
   })
 })

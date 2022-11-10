@@ -8,7 +8,7 @@ class ControllerStub implements Controller {
   }
 }
 
-const makeController = (): ControllerStub => {
+const mockController = (): ControllerStub => {
   const controllerStub = new ControllerStub()
   return controllerStub
 }
@@ -19,7 +19,7 @@ class LogErrorRepositoryStub implements LogErrorRepository {
   }
 }
 
-const makeLogErrorRepository = (): LogErrorRepositoryStub => {
+const mockLogErrorRepository = (): LogErrorRepositoryStub => {
   const logErrorRepositoryStub = new LogErrorRepositoryStub()
   return logErrorRepositoryStub
 }
@@ -31,8 +31,8 @@ interface SutTypes{
 }
 
 const makeSut = (): SutTypes => {
-  const controllerStub = makeController()
-  const logErrorRepositoryStub = makeLogErrorRepository()
+  const controllerStub = mockController()
+  const logErrorRepositoryStub = mockLogErrorRepository()
   const sut = new LogControllerDecorator(controllerStub, logErrorRepositoryStub)
   return {
     sut, controllerStub, logErrorRepositoryStub

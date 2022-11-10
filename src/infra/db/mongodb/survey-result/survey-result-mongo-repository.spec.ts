@@ -21,7 +21,7 @@ describe('SurveyResultMongoRepository', () => {
     return new SurveyResultMongoRepository()
   }
 
-  const makeAccount = async (): Promise<AccountModel> => {
+  const mockAccount = async (): Promise<AccountModel> => {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = {
       name: 'any_name',
@@ -32,7 +32,7 @@ describe('SurveyResultMongoRepository', () => {
     return MongoHelper.map(account)
   }
 
-  const makeSurvey = async (): Promise<SurveyModel> => {
+  const mockSurvey = async (): Promise<SurveyModel> => {
     const surveyCollection = await MongoHelper.getCollection('survey')
     const survey = {
       question: 'Question',
@@ -49,7 +49,7 @@ describe('SurveyResultMongoRepository', () => {
   }
 
   const insertSurveyResult = async (): Promise<SurveyResultModel> => {
-    const [account, survey] = await Promise.all([makeAccount(), makeSurvey()])
+    const [account, survey] = await Promise.all([mockAccount(), mockSurvey()])
     const surveyResult = {
       date: new Date(),
       answer: survey.answers[0].answer,
@@ -63,7 +63,7 @@ describe('SurveyResultMongoRepository', () => {
 
   describe('save()', () => {
     test('Should add a survey result if its new', async () => {
-      const [account, survey] = await Promise.all([makeAccount(), makeSurvey()])
+      const [account, survey] = await Promise.all([mockAccount(), mockSurvey()])
       const sut = makeSut()
       const params = {
         date: new Date(),

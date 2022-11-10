@@ -6,16 +6,16 @@ import {
 } from './load-survey-protocols'
 
 describe('LoadSurveyController', () => {
-  const makeLoadSurveyStub = (): LoadSurvey => {
+  const mockLoadSurveyStub = (): LoadSurvey => {
     class LoadSurveyStub implements LoadSurvey {
       async load (): Promise<SurveyModel[] | null> {
-        return makeFakeSurveys()
+        return mockFakeSurveys()
       }
     }
     return new LoadSurveyStub()
   }
 
-  const makeFakeSurveys = (): SurveyModel[] => ([
+  const mockFakeSurveys = (): SurveyModel[] => ([
     {
       id: 'any_id',
       question: 'anu_question',
@@ -26,7 +26,7 @@ describe('LoadSurveyController', () => {
 
   const makeSut = (): SutTypes => {
     jest.useFakeTimers()
-    const loadSurvey = makeLoadSurveyStub()
+    const loadSurvey = mockLoadSurveyStub()
     const sut = new LoadSurveyController(loadSurvey)
     return {
       loadSurvey,
@@ -57,7 +57,7 @@ describe('LoadSurveyController', () => {
   test('Should return 200 on sucess', async () => {
     const { sut } = makeSut()
     const response = await sut.handle()
-    const surveys = makeFakeSurveys()
+    const surveys = mockFakeSurveys()
     expect(response).toEqual(ok({
       surveys
     }))

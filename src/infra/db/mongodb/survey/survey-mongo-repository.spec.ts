@@ -20,7 +20,7 @@ describe('SurveyMongoRepository', () => {
     return new SurveyMongoRepository()
   }
 
-  const makeFakeSurveys = (): any => ([
+  const mockFakeSurveys = (): any => ([
     {
       question: 'any_question',
       date: new Date(),
@@ -51,7 +51,7 @@ describe('SurveyMongoRepository', () => {
 
   describe('load', () => {
     test('Should return an array of surveys if succeeds', async () => {
-      await surveyCollection.insertMany(makeFakeSurveys())
+      await surveyCollection.insertMany(mockFakeSurveys())
       const sut = makeSut()
       const surveys = await sut.load()
       expect(surveys).toBeTruthy()
@@ -73,7 +73,7 @@ describe('SurveyMongoRepository', () => {
 
   describe('loadById', () => {
     test('Should return an survey on success', async () => {
-      const retorno = await surveyCollection.insertMany(makeFakeSurveys())
+      const retorno = await surveyCollection.insertMany(mockFakeSurveys())
       const id = retorno.insertedIds['0'].toString()
       const sut = makeSut()
       const survey = await sut.loadById(id)

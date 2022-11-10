@@ -7,10 +7,10 @@ describe('DbLoadSurveys', () => {
     loadSurveyRepositoryStub: LoadSurveysRepository
   }
 
-  const makeLoadSurveysRepositoryStub = (): LoadSurveysRepository => {
+  const mockLoadSurveysRepositoryStub = (): LoadSurveysRepository => {
     class LoadSurveysRepositoryStub implements LoadSurveysRepository {
       async load (): Promise<SurveyModel[]> {
-        return makeFakeSurveys()
+        return mockFakeSurveys()
       }
     }
     return new LoadSurveysRepositoryStub()
@@ -18,7 +18,7 @@ describe('DbLoadSurveys', () => {
 
   const makeSut = (): SutTypes => {
     jest.useFakeTimers()
-    const loadSurveyRepositoryStub = makeLoadSurveysRepositoryStub()
+    const loadSurveyRepositoryStub = mockLoadSurveysRepositoryStub()
     const sut = new DbLoadSurveys(loadSurveyRepositoryStub)
     return {
       sut,
@@ -26,7 +26,7 @@ describe('DbLoadSurveys', () => {
     }
   }
 
-  const makeFakeSurveys = (): SurveyModel[] => ([
+  const mockFakeSurveys = (): SurveyModel[] => ([
     {
       id: 'any_id',
       question: 'anu_question',
@@ -52,6 +52,6 @@ describe('DbLoadSurveys', () => {
   test('Should return corret values on sucess', async () => {
     const { sut } = makeSut()
     const surveys = await sut.load()
-    expect(surveys).toEqual(makeFakeSurveys())
+    expect(surveys).toEqual(mockFakeSurveys())
   })
 })

@@ -7,10 +7,10 @@ describe('DbLoadSurveysById', () => {
     loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository
   }
 
-  const makeLoadSurveyByIdRepositoryStub = (): LoadSurveyByIdRepository => {
+  const mockLoadSurveyByIdRepositoryStub = (): LoadSurveyByIdRepository => {
     class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
       async loadById (id: string): Promise<SurveyModel> {
-        return makeFakeSurvey()
+        return mockFakeSurvey()
       }
     }
     return new LoadSurveyByIdRepositoryStub()
@@ -18,7 +18,7 @@ describe('DbLoadSurveysById', () => {
 
   const makeSut = (): SutTypes => {
     jest.useFakeTimers()
-    const loadSurveyByIdRepositoryStub = makeLoadSurveyByIdRepositoryStub()
+    const loadSurveyByIdRepositoryStub = mockLoadSurveyByIdRepositoryStub()
     const sut = new DbLoadSurveysById(loadSurveyByIdRepositoryStub)
     return {
       sut,
@@ -26,7 +26,7 @@ describe('DbLoadSurveysById', () => {
     }
   }
 
-  const makeFakeSurvey = (): SurveyModel => (
+  const mockFakeSurvey = (): SurveyModel => (
     {
       id: 'any_id',
       question: 'anu_question',
@@ -35,11 +35,11 @@ describe('DbLoadSurveysById', () => {
     }
   )
 
-  const makeFakeParams = (): string => ('any_id')
+  const mockFakeParams = (): string => ('any_id')
 
   test('Should calls LoadSurveyByIdRepository with id', async () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSut()
-    const params = makeFakeParams()
+    const params = mockFakeParams()
     const loadSpy = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById')
     await sut.loadById(params)
     expect(loadSpy).toBeCalledWith(params)
@@ -55,6 +55,6 @@ describe('DbLoadSurveysById', () => {
   test('Should return corret value on sucess', async () => {
     const { sut } = makeSut()
     const survey = await sut.loadById('any_id')
-    expect(survey).toEqual(makeFakeSurvey())
+    expect(survey).toEqual(mockFakeSurvey())
   })
 })

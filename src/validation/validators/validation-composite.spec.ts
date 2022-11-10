@@ -2,7 +2,7 @@ import { Validation } from '@/presentation/protocols/validation'
 import { ValidationComposite } from './validation-composite'
 
 describe('ValidationComposite', () => {
-  const makeValidationStub = (): Validation => {
+  const mockValidationStub = (): Validation => {
     class FakeValidationStub implements Validation {
       validate (input: any): Error | undefined {
         return undefined
@@ -11,7 +11,7 @@ describe('ValidationComposite', () => {
     return new FakeValidationStub()
   }
   const makeSut = (): any => {
-    const fakeValidationStubs = [makeValidationStub(), makeValidationStub()]
+    const fakeValidationStubs = [mockValidationStub(), mockValidationStub()]
     const sut = new ValidationComposite(fakeValidationStubs)
     return {
       sut,
