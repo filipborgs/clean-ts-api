@@ -1,5 +1,5 @@
 import { badRequest, noContent, serverError } from '@/presentation/helpers/http/http-helper'
-import { HttpRequest, Validation, AddSurvey, AddSurveyModel } from './add-survey-protocols'
+import { HttpRequest, Validation, AddSurvey, AddSurveyParams } from './add-survey-protocols'
 import { AddSurveyController } from './add-survey-controller'
 describe('AddSurveyController', () => {
   interface SutTypes {
@@ -19,7 +19,7 @@ describe('AddSurveyController', () => {
 
   const makeAddSurveyStub = (): AddSurvey => {
     class AddSurveyStub implements AddSurvey {
-      async add (data: AddSurveyModel): Promise<void> {}
+      async add (data: AddSurveyParams): Promise<void> {}
     }
     return new AddSurveyStub()
   }

@@ -1,13 +1,13 @@
 import { SingUpController } from './singup-controller'
 import { AlreadyInUseError, ServerError } from '@/presentation/erros'
-import { AddAccount, AddAccountModel, AccountModel, HttpRequest, HttpResponse, Authentication, AuthenticationModel } from './singup-controller-protocols'
+import { AddAccount, AddAccountParams, AccountModel, HttpRequest, HttpResponse, Authentication, AuthenticationParams } from './singup-controller-protocols'
 import { Validation } from '@/presentation/protocols/validation'
 import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
 
 describe('SingUp Controller', () => {
   const makeAuthenticationStub = (): Authentication => {
     class AuthenticationStub implements Authentication {
-      async login (authentication: AuthenticationModel): Promise<string | null> {
+      async login (authentication: AuthenticationParams): Promise<string | null> {
         return 'valid_token'
       }
     }
@@ -17,7 +17,7 @@ describe('SingUp Controller', () => {
   }
 
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParams): Promise<AccountModel> {
       const fakeAccount: AccountModel = {
         id: 'valid_id',
         name: account.name,
@@ -63,7 +63,7 @@ describe('SingUp Controller', () => {
   test('should return 500 if AddAccount throws', async () => {
     const httpRequest = makeHttpRequest()
     const { sut, addAccountStub } = makeSut()
-    const throwsFunction = async (account: AddAccountModel): Promise<AccountModel> => { throw new Error() }
+    const throwsFunction = async (account: AddAccountParams): Promise<AccountModel> => { throw new Error() }
     jest.spyOn(addAccountStub, 'add').mockImplementation(throwsFunction)
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)

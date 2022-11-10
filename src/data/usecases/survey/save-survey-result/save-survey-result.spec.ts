@@ -1,5 +1,5 @@
 import { DbSaveSurveyResult } from './save-survey-result'
-import { SaveSurveyResultModel, SaveSurveyResultRepository, SurveyResultModel } from './save-survey-result-protocols'
+import { SaveSurveyResultParams, SaveSurveyResultRepository, SurveyResultModel } from './save-survey-result-protocols'
 
 describe('DbSaveSurveyResult UseCase', () => {
   interface SutTypes {
@@ -9,7 +9,7 @@ describe('DbSaveSurveyResult UseCase', () => {
 
   const makeSaveSurveyResultRepositoryStub = (): SaveSurveyResultRepository => {
     class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
-      async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
+      async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
         return makeFakeSurveyResult()
       }
     }
@@ -36,7 +36,7 @@ describe('DbSaveSurveyResult UseCase', () => {
     }
   )
 
-  const makeFakeData = (): SaveSurveyResultModel => ({
+  const makeFakeData = (): SaveSurveyResultParams => ({
     accountId: 'any_id',
     surveyId: 'any_id',
     date: new Date(),

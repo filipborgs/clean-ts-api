@@ -1,5 +1,5 @@
 import { DbAddSurvey } from './db-add-survey'
-import { AddSurveyModel, AddSurveyRepository } from './db-add-survey-protocols'
+import { AddSurveyParams, AddSurveyRepository } from './db-add-survey-protocols'
 
 describe('DbAddSurvey UseCase', () => {
   interface SutTypes {
@@ -9,7 +9,7 @@ describe('DbAddSurvey UseCase', () => {
 
   const makeAddSurveyRepositoryStub = (): AddSurveyRepository => {
     class AddSurveyRepositoryStub implements AddSurveyRepository {
-      async add (data: AddSurveyModel): Promise<void> { }
+      async add (data: AddSurveyParams): Promise<void> { }
     }
     return new AddSurveyRepositoryStub()
   }
@@ -23,7 +23,7 @@ describe('DbAddSurvey UseCase', () => {
     }
   }
 
-  const makeFakeData = (): AddSurveyModel => ({
+  const makeFakeData = (): AddSurveyParams => ({
     question: 'any_question',
     answers: [{
       image: 'any_image',

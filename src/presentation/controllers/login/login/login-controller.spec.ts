@@ -1,10 +1,10 @@
-import { Authentication, HttpRequest, Validation, AuthenticationModel } from './login-controller-protocols'
+import { Authentication, HttpRequest, Validation, AuthenticationParams } from './login-controller-protocols'
 import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { LoginController } from './login-controller'
 
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async login (authentication: AuthenticationModel): Promise<string | null> {
+    async login (authentication: AuthenticationParams): Promise<string | null> {
       return 'valid_token'
     }
   }

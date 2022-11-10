@@ -1,11 +1,11 @@
-import { HttpRequest, LoadSurveyById, SaveSurveyResultModel, SurveyModel, SurveyResultModel } from '../login/singup/singup-controller-protocols'
+import { HttpRequest, LoadSurveyById, SaveSurveyResultParams, SurveyModel, SurveyResultModel } from '../login/singup/singup-controller-protocols'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { forbidden, InvalidParamError, ok, SaveSurveyResult, serverError } from './save-survey-result-controller-protocols'
 
 describe('SaveSurveyResultController', () => {
   const makeSaveSurveyResultStub = (): SaveSurveyResult => {
     class SaveSurveyResultStub implements SaveSurveyResult {
-      async save (data: SaveSurveyResultModel): Promise<SurveyResultModel> {
+      async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
         return makeFakeSurveyResult()
       }
     }
