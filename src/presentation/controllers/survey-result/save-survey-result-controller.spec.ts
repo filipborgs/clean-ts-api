@@ -40,6 +40,7 @@ describe('SaveSurveyResultController', () => {
   }
 
   const makeSut = (): SutTypes => {
+    jest.useFakeTimers()
     const saveSurveyResultStub = makeSaveSurveyResultStub()
     const loadSurveyByIdStub = makeLoadSurveyByIdStub()
 
@@ -57,7 +58,8 @@ describe('SaveSurveyResultController', () => {
     },
     body: {
       answer: 'valid_answer'
-    }
+    },
+    accountId: 'any_id'
   })
 
   test('Should call LoadSurveyById with correct values', async () => {
@@ -92,5 +94,19 @@ describe('SaveSurveyResultController', () => {
       }
     })
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('answer')))
+  })
+
+  test('Should call SaveSurveyResult with correct values', async () => {
+    const { sut, saveSurveyResultStub } = makeSut()
+    const saveSpy = jest.spyOn(saveSurveyResultStub, 'save')
+    const params = makeFakeRequest()
+    await sut.handle(params)
+    const { params: { surveyId }, body: { answer }, accountId } = params
+    expect(saveSpy).toHaveBeenCalledWith({
+      surveyId,
+      answer,
+      date: new Date(),
+      accountId
+    })
   })
 })
