@@ -1,33 +1,16 @@
-import { LoadSurveyController } from './load-survey-controller'
+import { mockSurveysModel } from '@/domain/test'
+import { mockThrowError, throwError } from '@/domain/test/test-helpers'
+import { mockLoadSurveys } from '@/presentation/test'
+import { LoadSurveysController } from './load-surveys-controller'
 import {
-  LoadSurvey,
-  SurveyModel,
-  serverError, ok, noContent
-} from './load-survey-protocols'
+  LoadSurveys, noContent, ok, serverError
+} from './load-surveys-protocols'
 
 describe('LoadSurveyController', () => {
-  const mockLoadSurveyStub = (): LoadSurvey => {
-    class LoadSurveyStub implements LoadSurvey {
-      async load (): Promise<SurveyModel[] | null> {
-        return mockFakeSurveys()
-      }
-    }
-    return new LoadSurveyStub()
-  }
-
-  const mockFakeSurveys = (): SurveyModel[] => ([
-    {
-      id: 'any_id',
-      question: 'anu_question',
-      date: new Date(),
-      answers: []
-    }
-  ])
-
   const makeSut = (): SutTypes => {
     jest.useFakeTimers()
-    const loadSurvey = mockLoadSurveyStub()
-    const sut = new LoadSurveyController(loadSurvey)
+    const loadSurvey = mockLoadSurveys()
+    const sut = new LoadSurveysController(loadSurvey)
     return {
       loadSurvey,
       sut
@@ -35,8 +18,8 @@ describe('LoadSurveyController', () => {
   }
 
   interface SutTypes {
-    loadSurvey: LoadSurvey
-    sut: LoadSurveyController
+    loadSurvey: LoadSurveys
+    sut: LoadSurveysController
   }
 
   test('Should call LoadSurvey with no values', async () => {
@@ -48,16 +31,15 @@ describe('LoadSurveyController', () => {
 
   test('Should return 500 if LoadSurvey throws', async () => {
     const { sut, loadSurvey } = makeSut()
-    const error = new Error('error')
-    jest.spyOn(loadSurvey, 'load').mockImplementation(() => { throw error })
+    jest.spyOn(loadSurvey, 'load').mockImplementation(mockThrowError)
     const response = await sut.handle()
-    expect(response).toEqual(serverError(error))
+    expect(response).toEqual(serverError(throwError))
   })
 
   test('Should return 200 on sucess', async () => {
     const { sut } = makeSut()
     const response = await sut.handle()
-    const surveys = mockFakeSurveys()
+    const surveys = mockSurveysModel()
     expect(response).toEqual(ok({
       surveys
     }))

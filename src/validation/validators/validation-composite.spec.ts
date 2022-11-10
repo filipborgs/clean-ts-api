@@ -1,15 +1,7 @@
-import { Validation } from '@/presentation/protocols/validation'
+import { mockValidationStub } from '@/validation/test/mock-validation'
 import { ValidationComposite } from './validation-composite'
 
 describe('ValidationComposite', () => {
-  const mockValidationStub = (): Validation => {
-    class FakeValidationStub implements Validation {
-      validate (input: any): Error | undefined {
-        return undefined
-      }
-    }
-    return new FakeValidationStub()
-  }
   const makeSut = (): any => {
     const fakeValidationStubs = [mockValidationStub(), mockValidationStub()]
     const sut = new ValidationComposite(fakeValidationStubs)

@@ -1,12 +1,12 @@
 import {
   Controller,
   HttpResponse,
-  LoadSurvey,
+  LoadSurveys,
   serverError, ok, noContent
-} from './load-survey-protocols'
+} from './load-surveys-protocols'
 
-export class LoadSurveyController implements Controller {
-  constructor (private readonly loadSurvey: LoadSurvey) {}
+export class LoadSurveysController implements Controller {
+  constructor (private readonly loadSurvey: LoadSurveys) {}
   async handle (): Promise<HttpResponse> {
     try {
       const surveys = await this.loadSurvey.load()

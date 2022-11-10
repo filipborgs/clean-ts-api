@@ -1,4 +1,4 @@
 export * from './load-surveys'
 export * from './add-survey'
-export * from './load-surveys-by-id'
-export * from './save-survey-result'
+export * from './load-survey-by-id'
+export * from '../survey-result/save-survey-result'

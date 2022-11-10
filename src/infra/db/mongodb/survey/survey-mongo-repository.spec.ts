@@ -1,10 +1,11 @@
+import { SurveyModel } from '@/domain/models'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 
 describe('SurveyMongoRepository', () => {
   let surveyCollection
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   afterAll(async () => {
@@ -20,16 +21,24 @@ describe('SurveyMongoRepository', () => {
     return new SurveyMongoRepository()
   }
 
-  const mockFakeSurveys = (): any => ([
+  const mockSurveysModel = (): SurveyModel[] => ([
     {
+      id: 'any_id',
       question: 'any_question',
       date: new Date(),
-      answers: []
+      answers: [{
+        image: 'any_image',
+        answer: 'any_answer'
+      }]
     },
     {
+      id: 'any_id2',
       question: 'any_question2',
       date: new Date(),
-      answers: []
+      answers: [{
+        image: 'any_image2',
+        answer: 'any_answer2'
+      }]
     }
   ])
 
@@ -51,7 +60,7 @@ describe('SurveyMongoRepository', () => {
 
   describe('load', () => {
     test('Should return an array of surveys if succeeds', async () => {
-      await surveyCollection.insertMany(mockFakeSurveys())
+      await surveyCollection.insertMany(mockSurveysModel())
       const sut = makeSut()
       const surveys = await sut.load()
       expect(surveys).toBeTruthy()
@@ -73,7 +82,7 @@ describe('SurveyMongoRepository', () => {
 
   describe('loadById', () => {
     test('Should return an survey on success', async () => {
-      const retorno = await surveyCollection.insertMany(mockFakeSurveys())
+      const retorno = await surveyCollection.insertMany(mockSurveysModel())
       const id = retorno.insertedIds['0'].toString()
       const sut = makeSut()
       const survey = await sut.loadById(id)

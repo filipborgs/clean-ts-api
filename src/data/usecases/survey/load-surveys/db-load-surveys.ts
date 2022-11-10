@@ -1,6 +1,6 @@
-import { LoadSurvey, LoadSurveysRepository, SurveyModel } from './db-load-surveys-protocols'
+import { LoadSurveys, LoadSurveysRepository, SurveyModel } from './db-load-surveys-protocols'
 
-export class DbLoadSurveys implements LoadSurvey {
+export class DbLoadSurveys implements LoadSurveys {
   constructor (private readonly loadSurveys: LoadSurveysRepository) {}
   async load (): Promise<SurveyModel[] | null> {
     return await this.loadSurveys.load()

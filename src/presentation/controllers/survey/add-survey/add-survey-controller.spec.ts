@@ -1,6 +1,8 @@
+import { mockThrowError, throwError } from '@/domain/test/test-helpers'
 import { badRequest, noContent, serverError } from '@/presentation/helpers/http/http-helper'
-import { HttpRequest, Validation, AddSurvey, AddSurveyParams } from './add-survey-protocols'
+import { mockAddSurvey, mockValidation } from '@/presentation/test'
 import { AddSurveyController } from './add-survey-controller'
+import { AddSurvey, HttpRequest, Validation } from './add-survey-protocols'
 describe('AddSurveyController', () => {
   interface SutTypes {
     sut: AddSurveyController
@@ -8,26 +10,10 @@ describe('AddSurveyController', () => {
     addSurveyStub: AddSurvey
   }
 
-  const mockValidationStub = (): Validation => {
-    class ValidationStub implements Validation {
-      validate (input: any): Error | undefined {
-        return undefined
-      }
-    }
-    return new ValidationStub()
-  }
-
-  const mockAddSurveyStub = (): AddSurvey => {
-    class AddSurveyStub implements AddSurvey {
-      async add (data: AddSurveyParams): Promise<void> {}
-    }
-    return new AddSurveyStub()
-  }
-
   const makeSut = (): SutTypes => {
     jest.useFakeTimers()
-    const validationStub = mockValidationStub()
-    const addSurveyStub = mockAddSurveyStub()
+    const validationStub = mockValidation()
+    const addSurveyStub = mockAddSurvey()
     const sut = new AddSurveyController(validationStub, addSurveyStub)
     return {
       sut,
@@ -64,9 +50,9 @@ describe('AddSurveyController', () => {
 
   it('Should return 500 if Validate thorws', async () => {
     const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error('any_error') })
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(mockThrowError)
     const httpResponse = await sut.handle(mockFakeRequest())
-    expect(httpResponse).toEqual(serverError(new Error('any_error')))
+    expect(httpResponse).toEqual(serverError(throwError))
   })
 
   it('Should retuns 204 if succeeds', async () => {
@@ -85,8 +71,8 @@ describe('AddSurveyController', () => {
 
   it('Should return 500 if AddSurvey thorws', async () => {
     const { sut, addSurveyStub } = makeSut()
-    jest.spyOn(addSurveyStub, 'add').mockImplementationOnce(() => { throw new Error('any_error') })
+    jest.spyOn(addSurveyStub, 'add').mockImplementationOnce(mockThrowError)
     const httpResponse = await sut.handle(mockFakeRequest())
-    expect(httpResponse).toEqual(serverError(new Error('any_error')))
+    expect(httpResponse).toEqual(serverError(throwError))
   })
 })

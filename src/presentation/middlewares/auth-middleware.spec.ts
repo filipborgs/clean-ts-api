@@ -1,7 +1,10 @@
 import { AuthMiddleware } from './auth-middleware'
 import { forbidden, ok, serverError } from '@/presentation/helpers/http/http-helper'
 import { AccessDeniedError } from '@/presentation/erros'
-import { LoadAccountByToken, HttpRequest, AccountModel } from './auth-middleware-protocols'
+import { LoadAccountByToken, HttpRequest } from './auth-middleware-protocols'
+import { mockThrowError, throwError } from '@/domain/test/test-helpers'
+import { mockAccountModel } from '@/domain/test'
+import { mockLoadAccountByToken } from '@/presentation/test'
 
 describe('Auth Middleware', () => {
   interface SutTypes {
@@ -9,31 +12,14 @@ describe('Auth Middleware', () => {
     loadAccountByTokenStub: LoadAccountByToken
   }
 
-  const mockLoadAccountByTokenStub = (): LoadAccountByToken => {
-    class LoadAccountByTokenStub implements LoadAccountByToken {
-      async loadByToken (email: string): Promise<AccountModel | null> {
-        return mockFakeAccount()
-      }
-    }
-
-    return new LoadAccountByTokenStub()
-  }
-
   const makeSut = (): SutTypes => {
-    const loadAccountByTokenStub = mockLoadAccountByTokenStub()
+    const loadAccountByTokenStub = mockLoadAccountByToken()
     const sut = new AuthMiddleware(loadAccountByTokenStub, 'any_role')
     return {
       sut,
       loadAccountByTokenStub
     }
   }
-
-  const mockFakeAccount = (): AccountModel => ({
-    id: 'any_id',
-    name: 'any_name',
-    email: 'any_email',
-    password: 'hashed_password'
-  })
 
   const mockFakeHttpRequest = (): HttpRequest => ({
     headers: {
@@ -65,14 +51,14 @@ describe('Auth Middleware', () => {
 
   test('Should returns 500 if LoadAccountByToken throws', async () => {
     const { sut, loadAccountByTokenStub } = makeSut()
-    jest.spyOn(loadAccountByTokenStub, 'loadByToken').mockImplementationOnce(() => { throw new Error('any_error') })
+    jest.spyOn(loadAccountByTokenStub, 'loadByToken').mockImplementationOnce(mockThrowError)
     const response = await sut.handle(mockFakeHttpRequest())
-    expect(response).toEqual(serverError(new Error('any_error')))
+    expect(response).toEqual(serverError(throwError))
   })
 
   test('Should returns 200 succeeds', async () => {
     const { sut } = makeSut()
     const response = await sut.handle(mockFakeHttpRequest())
-    expect(response).toEqual(ok(mockFakeAccount()))
+    expect(response).toEqual(ok(mockAccountModel()))
   })
 })

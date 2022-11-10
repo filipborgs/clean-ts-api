@@ -1,27 +1,8 @@
-import { Authentication, HttpRequest, Validation, AuthenticationParams } from './login-controller-protocols'
+import { mockThrowError, throwError } from '@/domain/test/test-helpers'
 import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers/http/http-helper'
+import { mockAuthentication, mockValidation } from '@/presentation/test'
 import { LoginController } from './login-controller'
-
-const mockAuthenticationStub = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    async login (authentication: AuthenticationParams): Promise<string | null> {
-      return 'valid_token'
-    }
-  }
-
-  const authenticationStub = new AuthenticationStub()
-  return authenticationStub
-}
-
-const mockValidationStub = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): Error | undefined {
-      return undefined
-    }
-  }
-  return new ValidationStub()
-}
-
+import { Authentication, HttpRequest, Validation } from './login-controller-protocols'
 interface SutTypes {
   sut: LoginController
   authenticationStub: Authentication
@@ -29,8 +10,8 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const authenticationStub = mockAuthenticationStub()
-  const validationStub = mockValidationStub()
+  const authenticationStub = mockAuthentication()
+  const validationStub = mockValidation()
   const sut = new LoginController(authenticationStub, validationStub)
   return {
     sut,
@@ -66,9 +47,9 @@ describe('Login Controller', () => {
 
   test('Should return 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'login').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(authenticationStub, 'login').mockImplementationOnce(mockThrowError)
     const httpResponse = await sut.handle(mockFakeRequest())
-    expect(httpResponse).toEqual(serverError(new Error()))
+    expect(httpResponse).toEqual(serverError(throwError))
   })
 
   test('Should return 200 if valid credentials are provided', async () => {

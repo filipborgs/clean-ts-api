@@ -1,50 +1,23 @@
-import { SingUpController } from './singup-controller'
+import { mockThrowError, throwError } from '@/domain/test/test-helpers'
 import { AlreadyInUseError, ServerError } from '@/presentation/erros'
-import { AddAccount, AddAccountParams, AccountModel, HttpRequest, HttpResponse, Authentication, AuthenticationParams } from './singup-controller-protocols'
-import { Validation } from '@/presentation/protocols/validation'
 import { badRequest, forbidden, serverError } from '@/presentation/helpers/http/http-helper'
+import { Validation } from '@/presentation/protocols/validation'
+import { mockAddAccount, mockAuthentication, mockValidation } from '@/presentation/test'
+import { SingUpController } from './singup-controller'
+import { AccountModel, AddAccount, AddAccountParams, Authentication, HttpRequest, HttpResponse } from './singup-controller-protocols'
 
 describe('SingUp Controller', () => {
-  const mockAuthenticationStub = (): Authentication => {
-    class AuthenticationStub implements Authentication {
-      async login (authentication: AuthenticationParams): Promise<string | null> {
-        return 'valid_token'
-      }
-    }
-
-    const authenticationStub = new AuthenticationStub()
-    return authenticationStub
-  }
-
-  class AddAccountStub implements AddAccount {
-    async add (account: AddAccountParams): Promise<AccountModel> {
-      const fakeAccount: AccountModel = {
-        id: 'valid_id',
-        name: account.name,
-        email: account.email,
-        password: account.password
-      }
-      return await Promise.resolve(fakeAccount)
-    }
-  }
-
-  class ValidationStub implements Validation {
-    validate (input: any): Error | undefined {
-      return undefined
-    }
-  }
-
   interface sutTypes {
     sut: SingUpController
-    addAccountStub: AddAccountStub
+    addAccountStub: AddAccount
     validationStub: Validation
     authenticationStub: Authentication
   }
 
   const makeSut = (): sutTypes => {
-    const addAccountStub = new AddAccountStub()
-    const validationStub = new ValidationStub()
-    const authenticationStub = mockAuthenticationStub()
+    const addAccountStub = mockAddAccount()
+    const validationStub = mockValidation()
+    const authenticationStub = mockAuthentication()
     const sut = new SingUpController(addAccountStub, validationStub, authenticationStub)
     return {
       sut, addAccountStub, validationStub, authenticationStub
@@ -131,8 +104,8 @@ describe('SingUp Controller', () => {
 
   test('Should return 500 if Authentication throws', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'login').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(authenticationStub, 'login').mockImplementationOnce(mockThrowError)
     const httpResponse = await sut.handle(mockHttpRequest())
-    expect(httpResponse).toEqual(serverError(new Error()))
+    expect(httpResponse).toEqual(serverError(throwError))
   })
 })
