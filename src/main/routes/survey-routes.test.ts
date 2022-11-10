@@ -8,7 +8,7 @@ describe('Survey Routes', () => {
   let accountCollection
 
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await MongoHelper.connect(process.env.MONGO_URL)
   })
 
   afterAll(async () => {
