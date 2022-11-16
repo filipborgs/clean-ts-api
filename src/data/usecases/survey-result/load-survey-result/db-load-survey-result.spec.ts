@@ -1,6 +1,6 @@
 import { LoadSurveyResultByIdRepository } from '@/data/protocols/db/survey-result/load-survey-result-by-id'
-import { mockSurveyResultModel } from '@/domain/test/mock-survey-result'
-import { SurveyResultModel } from '../save-survey-result/save-survey-result-protocols'
+import { mockLoadSurveyResultByIdRepository } from '@/data/test'
+import { mockThrowError, throwError } from '@/domain/test/test-helpers'
 import { DbLoadSurveyResult } from './db-load-survey-result'
 
 describe('DbLoadSurveyResult', () => {
@@ -10,14 +10,8 @@ describe('DbLoadSurveyResult', () => {
   }
 
   const makeSut = (): SutTypes => {
-    class LoadSurveyResultByIdRepositoryStub implements LoadSurveyResultByIdRepository {
-      async loadById (id: string): Promise<SurveyResultModel> {
-        return mockSurveyResultModel()
-      }
-    }
-
     jest.useFakeTimers()
-    const loadSurveyResultRepositoryStub = new LoadSurveyResultByIdRepositoryStub()
+    const loadSurveyResultRepositoryStub = mockLoadSurveyResultByIdRepository()
     const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub)
     return {
       sut,
@@ -31,5 +25,11 @@ describe('DbLoadSurveyResult', () => {
     const params = 'any_id'
     await sut.load(params)
     expect(loadSpy).toHaveBeenCalledWith(params)
+  })
+
+  test('Should throw if LoadSurveyResultByIdRepository throws', async () => {
+    const { sut, loadSurveyResultRepositoryStub } = makeSut()
+    jest.spyOn(loadSurveyResultRepositoryStub, 'loadById').mockImplementationOnce(mockThrowError)
+    await expect(sut.load('any_id')).rejects.toThrow(throwError)
   })
 })
