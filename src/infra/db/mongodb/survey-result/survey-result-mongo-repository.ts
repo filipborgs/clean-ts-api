@@ -7,7 +7,7 @@ import { SaveSurveyResultParams } from '@/domain/use-cases'
 import { LoadSurveyResultByIdRepository } from '@/data/protocols/db/survey-result/load-survey-result-by-id'
 
 export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultByIdRepository {
-  async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
+  async save (data: SaveSurveyResultParams): Promise<void> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.findOneAndUpdate({
       surveyId: new ObjectId(data.surveyId),
@@ -20,8 +20,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
     }, {
       upsert: true
     })
-    const surveyResult = await this.loadBySurveyId(data.surveyId)
-    return surveyResult
   }
 
   async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
@@ -179,7 +177,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
       })
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
-    if (surveyResult) {
+    if (surveyResult?.length) {
       const { surveyId: id, ...data } = surveyResult[0]
       return {
         ...data,
