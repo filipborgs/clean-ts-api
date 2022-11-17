@@ -22,7 +22,7 @@ describe('DbLoadSurveyResult', () => {
 
   test('Should call LoadSurveyResultByIdRepository with correct values', async () => {
     const { sut, loadSurveyResultRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadSurveyResultRepositoryStub, 'loadById')
+    const loadSpy = jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
     const params = 'any_id'
     await sut.load(params)
     expect(loadSpy).toHaveBeenCalledWith(params)
@@ -30,7 +30,7 @@ describe('DbLoadSurveyResult', () => {
 
   test('Should throw if LoadSurveyResultByIdRepository throws', async () => {
     const { sut, loadSurveyResultRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveyResultRepositoryStub, 'loadById').mockImplementationOnce(mockThrowError)
+    jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId').mockImplementationOnce(mockThrowError)
     await expect(sut.load('any_id')).rejects.toThrow(throwError)
   })
 

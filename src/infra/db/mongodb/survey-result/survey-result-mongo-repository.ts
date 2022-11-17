@@ -4,8 +4,9 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { QueryBuilder } from '@/infra/db/mongodb/helpers/query-builder'
 import { ObjectId } from 'mongodb'
 import { SaveSurveyResultParams } from '@/domain/use-cases'
+import { LoadSurveyResultByIdRepository } from '@/data/protocols/db/survey-result/load-survey-result-by-id'
 
-export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
+export class SurveyResultMongoRepository implements SaveSurveyResultRepository, LoadSurveyResultByIdRepository {
   async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.findOneAndUpdate({
@@ -23,7 +24,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
     return surveyResult
   }
 
-  private async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
+  async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
     const surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     const query = new QueryBuilder()
       .match({
@@ -178,6 +179,13 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
       })
       .build()
     const surveyResult = await surveyResultCollection.aggregate(query).toArray()
-    return surveyResult[0] ?? null as any
+    if (surveyResult) {
+      const { surveyId: id, ...data } = surveyResult[0]
+      return {
+        ...data,
+        surveyId: id.toString()
+      } as any
+    }
+    return null
   }
 }
