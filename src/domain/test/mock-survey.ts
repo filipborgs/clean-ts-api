@@ -3,12 +3,15 @@ import { AddSurveyParams } from '@/domain/use-cases'
 
 export const mockSurveyModel = (): SurveyModel => (
   {
-    id: 'any_id',
+    id: 'any_survey_id',
     question: 'any_question',
     date: new Date(),
     answers: [{
-      image: 'any_image',
       answer: 'any_answer'
+    },
+    {
+      image: 'any_image',
+      answer: 'any_answer2'
     }]
   }
 )
