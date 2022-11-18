@@ -1,6 +1,6 @@
 import { mockSurveyModel, mockSurveysModel } from '@/domain/test'
 import { AddSurvey, AddSurveyParams, LoadSurveyById, LoadSurveys } from '@/domain/use-cases'
-import { SurveyModel } from '../controllers/survey-result/save-survey-result-controller-protocols'
+import { SurveyModel } from '../controllers/survey-result/save-survey-result/save-survey-result-controller-protocols'
 
 export const mockAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
