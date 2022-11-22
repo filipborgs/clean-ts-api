@@ -1,3 +1,4 @@
+import { mockAuthenticationModel } from '@/domain/test'
 import { mockThrowError, throwError } from '@/domain/test/test-helpers'
 import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { mockAuthentication, mockValidation } from '@/presentation/test'
@@ -56,7 +57,7 @@ describe('Login Controller', () => {
     const { sut } = makeSut()
     const request = mockFakeRequest()
     const response = await sut.handle(request)
-    expect(response).toEqual(ok({ token: 'valid_token' }))
+    expect(response).toEqual(ok(mockAuthenticationModel()))
   })
 
   test('should call Validation with correct value', async () => {

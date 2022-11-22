@@ -17,9 +17,7 @@ export class LoginController implements Controller {
       const token = await this.authentication.login({ email, password })
       if (!token) return unauthorized()
 
-      return ok({
-        token
-      })
+      return ok(token)
     } catch (error) {
       return serverError(error)
     }

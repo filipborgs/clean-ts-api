@@ -20,9 +20,9 @@ export class SingUpController implements Controller {
       const account = await this.addAccount.add({ name, email, password })
       if (!account) return forbidden(new AlreadyInUseError('email'))
 
-      const token = await this.authentication.login({ email, password })
+      const auth = await this.authentication.login({ email, password })
 
-      return created({ account, token })
+      return created({ account, token: auth.accessToken })
     } catch (error) {
       return serverError(error)
     }

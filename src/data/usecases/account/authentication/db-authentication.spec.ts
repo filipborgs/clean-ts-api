@@ -1,5 +1,5 @@
 import { mockHashCompare, mockLoadAccountByEmailRepository, mockTokenGenerator, mockUpdateAccessTokenRepository } from '@/data/test'
-import { mockAuthenticationParams } from '@/domain/test'
+import { mockAuthenticationModel, mockAuthenticationParams } from '@/domain/test'
 import { mockThrowError, throwError } from '@/domain/test/test-helpers'
 import { DbAuthentication } from './db-authentication'
 import {
@@ -96,7 +96,7 @@ describe('DbAuthentication UseCase', () => {
   test('should return a token if HashComparer retuns a token', async () => {
     const { sut } = makeSut()
     const token = await sut.login(mockAuthenticationParams())
-    expect(token).toEqual('valid_token')
+    expect(token).toEqual(mockAuthenticationModel())
   })
 
   test('should call UpdateAccessTokenRepository with correct values', async () => {
